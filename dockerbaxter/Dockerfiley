@@ -31,7 +31,7 @@ RUN apt-get -y update && apt-get install -y zsh screen tree sudo ssh synaptic
  # libxkbcommon0
 
 RUN apt-get install -y x11-apps python-pip build-essential
-#RUN pip install catkin_tools
+RUN pip install catkin_tools
 
 # Make SSH available
 EXPOSE 22
@@ -62,11 +62,10 @@ RUN apt-get -y install wget
 #RUN sudo apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
 #RUN ubuntu:14.04 grep -v '^#' /etc/apt/sources.list
 #RUN apt-get -y update
-#RUN apt-get -y install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential
+RUN apt-get -y install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential
 #RUN apt-get install libgl1-mesa-dev-lts-trusty
 RUN apt-get -y install ros-kinetic-desktop-full
 #RUN apt-get -y install ros-indigo-desktop
-RUN apt-get -y install git-core python-argparse python-wstool python-vcstools python-rosdep ros-kinetic-control-msgs ros-kinetic-joystick-drivers
 #RUN apt-get -y install git-core python-argparse python-wstool python-vcstools python-rosdep ros-indigo-control-msgs ros-indigo-joystick-drivers
 #RUN apt-get -y install gazebo2 ros-indigo-qt-build ros-indigo-driver-common ros-indigo-gazebo-ros-control ros-indigo-gazebo-ros-pkgs ros-indigo-ros-control ros-indigo-control-toolbox ros-indigo-realtime-tools ros-indigo-ros-controllers ros-indigo-xacro python-wstool ros-indigo-tf-conversions ros-indigo-kdl-parser
 
