@@ -59,7 +59,7 @@ RUN pip install virtualenv
 RUN pip install virtualenvwrapper
 ENV WORKON_HOME ~/.virtualenvs
 RUN mkdir -p $WORKON_HOME
-RUN source /usr/local/bin/virtualenvwrapper.sh
+RUN /bin/bash -c "/usr/local/bin/virtualenvwrapper.sh"
 
 RUN rosdep init
 RUN rosdep update

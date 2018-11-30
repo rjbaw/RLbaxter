@@ -1,4 +1,6 @@
 FROM osrf/ros:kinetic-desktop-full
+
+RUN apt-get update && apt-get -y install locales
 RUN locale-gen en_US.UTF-8
 ENV LANG en_US.UTF-8
 
