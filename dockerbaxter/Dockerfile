@@ -100,8 +100,10 @@ CMD /bin/bash
 
 #MISSING DOWNLOAD of GAZEBO models inside: user/.gazebo/models
 #https://bitbucket.org/osrf/gazebo_models/downloads
--e QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix -e DISPLAY
+#-e QT_X11_NO_MITSHM=1 -v /tmp/.X11-unix -e DISPLAY
 #TODO xfce for enabling full desktop: apt-get install xfce4
 #TODO nvidia helpers: can be done at docker-run
 #TODO automatically source source /opt/ros/indigo/setup.bash by adding it to the .bashrc
-
+RUN xhost + 
+RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
+RUN source ~/.bashrc
