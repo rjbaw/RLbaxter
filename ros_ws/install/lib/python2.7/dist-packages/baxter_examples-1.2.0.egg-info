@@ -1,0 +1,10 @@
+Metadata-Version: 1.0
+Name: baxter_examples
+Version: 1.2.0
+Summary: Example programs for Baxter SDK usage.
+Home-page: http://sdk.rethinkrobotics.com
+Author: Rethink Robotics Inc.
+Author-email: rsdk.support@rethinkrobotics.com
+License: BSD
+Description: UNKNOWN
+Platform: UNKNOWN
