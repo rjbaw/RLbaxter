@@ -61,23 +61,27 @@ ENV WORKON_HOME ~/.virtualenvs
 RUN mkdir -p $WORKON_HOME
 RUN /bin/bash -c "/usr/local/bin/virtualenvwrapper.sh"
 
-RUN rosdep init
+#RUN rosdep init
 RUN rosdep update
-RUN source /opt/ros/kinetic/setup.bash
+RUN chmod u+x /opt/ros/kinetic/setup.bash
+RUN /bin/bash -c "/opt/ros/kinetic/setup.bash"
 RUN mkdir -p ~/ros_ws/src
-#RUN cd ~/ros_ws
-#RUN source devel/setup.bash
+#RUN cd ~/ros_ws/src
+RUN apt-get install -y python-catkin-tools
+RUN catkin_init_workspace
+RUN cd ~/ros_ws
 RUN catkin_make
+RUN bin/bash -c "devel/setup.bash"
 #RUN rosinstall_generator desktop_full --rosdistro indigo --deps --wet-only --tar > indigo-desktop-full-wet.rosinstall
 #RUN wstool init -j8 src indigo-desktop-full-wet.rosinstall
 #RUN rosdep install --from-paths src --ignore-src --rosdistro indigo -y
 #RUN ./src/catkin/bin/catkin_make_isolated --install-space /opt/ros/indigo -DCMAKE_BUILD_TYPE=Release
-RUN source /opt/ros/kinetic/setup.bash
+#RUN /bin/bash -c "/opt/ros/kinetic/setup.bash"
 
 RUN cd ~/ros_ws/src
 RUN wstool init .
-RUN rosdep install 
-#RUN wstool set --target-workspace=src
+#RUN rosdep install 
+#RUN wstool set --target-workspace=src --git
 #RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/release-1.1.1/baxter_sdk.rosinstall
 RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/master/baxter_sdk.rosinstall
 RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter_simulator/kinetic-devel/baxter_simulator.rosinstall

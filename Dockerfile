@@ -19,27 +19,29 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/likb/apt/lists/*
 
 # final part
-RUN rosdep init
-RUN rosdep update
-RUN apt-get install python-rosinstall
-RUN mkdir -p ~/ros_ws/src
+#RUN rosdep init
+#RUN rosdep update
+#RUN apt-get install python-rosinstall
+#RUN mkdir -p ~/ros_ws/src
 #RUN cd ~/ros_ws
 #RUN rosinstall_generator desktop_full --rosdistro indigo --deps --wet-only --tar > indigo-desktop-full-wet.rosinstall
 #RUN wstool init -j8 src indigo-desktop-full-wet.rosinstall
 #RUN rosdep install --from-paths src --ignore-src --rosdistro indigo -y
 #RUN ./src/catkin/bin/catkin_make_isolated --install-space /opt/ros/indigo -DCMAKE_BUILD_TYPE=Release
-#RUN source /opt/ros/indigo/setup.bash
-RUN cd ~/ros_ws/src
-RUN wstool init .
+RUN chmod u+x /opt/ros/kinetic/setup.zsh
+RUN /bin/bash -c "/opt/ros/kinetic/setup.zsh"
+#RUN cd ~/ros_ws/src
+#RUN catkin_make
+#RUN wstool init .
 #RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/release-1.1.1/baxter_sdk.rosinstall
-RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/master/baxter_sdk.rosinstall
-RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter_simulator/kinetic-devel/baxter_simulator.rosinstall
-RUN wstool update
-RUN cd ~/ros_ws
-RUN catkin_make
-RUN catkin_make install
-RUN wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
-RUN chmod u+x baxter.sh
+#RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/master/baxter_sdk.rosinstall
+#RUN wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter_simulator/kinetic-devel/baxter_simulator.rosinstall
+#RUN wstool update
+#RUN cd ~/ros_ws
+#RUN catkin_make
+#RUN catkin_make install
+#RUN wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
+#RUN chmod u+x baxter.sh
 
 #extra packages for SSSA TAUM
 #RUN apt-get install ros-indigo-openni2-camera ros-indigo-visp ros-indigo-visp-bridge ros-indigo-moveit-core libzmq-dev libx264-dev ros-indigo-moveit-ros-move-group ros-indigo-ecl-geometry
