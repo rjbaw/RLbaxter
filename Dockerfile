@@ -1,8 +1,13 @@
-FROM osrf/ros:kinetic-desktop-full
+#FROM osrf/ros:kinetic-desktop-full
 
-RUN apt-get update && apt-get -y install locales
-RUN locale-gen en_US.UTF-8
-ENV LANG en_US.UTF-8
+#RUN apt-get update && apt-get -y install locales
+#RUN locale-gen en_US.UTF-8
+#ENV LANG en_US.UTF-8
+
+FROM ros:kinetic-robot
+
+#RUN rm /bin/sh && ln -s /bin/bash /bin/sh
+#SHELL ["/bin/bash", "-c"]
 
 RUN apt-get update && apt-get install -y \
     tmux \
@@ -17,6 +22,24 @@ RUN apt-get update && apt-get install -y \
     mesa-utils \
     unzip \
     && rm -rf /var/likb/apt/lists/*
+RUN apt-get -y install ros-kinetic-desktop-full
+RUN apt-get install -y gazebo7 ros-kinetic-qt-build ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-ros-control ros-kinetic-control-toolbox ros-kinetic-realtime-tools ros-kinetic-ros-controllers ros-kinetic-xacro python-wstool ros-kinetic-tf-conversions ros-kinetic-kdl-parser
+
+RUN apt-get install -y x11-apps python-pip build-essential
+RUN pip install catkin_tools
+
+# required to build certain python libraries
+RUN apt-get install python3-dev python-dev -y
+RUN apt-get -y install python-rosinstall
+RUN apt-get -y install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential
+RUN pip install --upgrade pip 
+
+# install and configure virtualenv
+RUN pip install virtualenv 
+RUN pip install virtualenvwrapper
+ENV WORKON_HOME ~/.virtualenvs
+RUN mkdir -p $WORKON_HOME
+RUN /bin/bash -c "/usr/local/bin/virtualenvwrapper.sh"
 
 # final part
 #RUN rosdep init
@@ -50,6 +73,7 @@ RUN /bin/bash -c "/opt/ros/kinetic/setup.zsh"
 #CMD /bin/bash
 
 CMD ["zsh"]
+EXPOSE 22
 
 #MISSING DOWNLOAD of GAZEBO models inside: user/.gazebo/models
 #https://bitbucket.org/osrf/gazebo_models/downloads

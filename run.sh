@@ -1,6 +1,6 @@
 #!/bin/bash
 xhost +local:
-docker run -it --net=host \
+/usr/local/bin/./txdocker run -it --net=host \
   --user=$(id -u) \
   -e DISPLAY=$DISPLAY \
   -e QT_GRAPHICSSYSTEM=native \
@@ -13,6 +13,6 @@ docker run -it --net=host \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
-  --device=/dev/dri:/dev/dri \
+  --device=/media/nvidia\
   --name=ros-kinetic-dev \
-  ezvk7740/baxter
+  ezvk7740/baxter:kinetic
