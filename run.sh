@@ -13,6 +13,6 @@ xhost +local:
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
-  --device=/media/nvidia\
+  --device=/dev/sda\
   --name=ros-kinetic-dev \
   ezvk7740/baxter:kinetic
