@@ -3,7 +3,7 @@ apt-get install wget
 rosdep init
 rosdep update
 chmod u+x /opt/ros/kinetic/setup.bash
-source /opt/ros/kinetic/setup.bash
+source /opt/ros/kinetic/setup.zsh
 mkdir -p ~/ros_ws/src
 #RUN cd ~/ros_ws/src
 apt-get install -y python-catkin-tools
@@ -26,10 +26,7 @@ wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/master/bax
 wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter_simulator/kinetic-devel/baxter_simulator.rosinstall
 wstool update
 cd ~/ros_ws
-source /opt/ros/kinetic/setup.bash
-source ~/.bashrc
 catkin_make
 catkin_make install
 wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
 chmod u+x baxter.sh
-

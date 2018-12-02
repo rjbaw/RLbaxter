@@ -1,6 +1,7 @@
 #!/bin/bash
 xhost +local:
-/usr/local/bin/./txdocker run -it --net=host \
+/usr/local/bin/./txdocker run -it \
+  --net=host \
   --user=$(id -u) \
   --device /dev/nvhost-as-gpu \
   --device /dev/nvhost-ctrl \
@@ -15,6 +16,11 @@ xhost +local:
   --device /dev/snd \
   -e DISPLAY \
   -e QT_GRAPHICSSYSTEM=native \
+  -e QT_X11_NO_MITSHM=1 \
+  -v /dev/shm:/dev/shm \
+  -v /etc/localtime:/etc/localtime:ro \
+  -v /tmp/.X11-unix:/tmp/.X11-unix \
+  -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro \
   -e CONTAINER_NAME=ros-kinetic-dev \
   -e USER=$USER \
   --workdir=/home/$USER \
@@ -26,4 +32,6 @@ xhost +local:
   -v "/home/$USER/:/home/$USER/" \
   --device=/dev/sda\
   --name=ros-kinetic-dev \
-  ezvk7740/baxter:kinetic
+  baxter
+  #ezvk7740/baxter:kinetic
+xhost -local:root
