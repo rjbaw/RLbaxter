@@ -3,7 +3,7 @@ HOST_IP=`hostname -I | awk '{print $1}'`
 REPOSITORY='ezvk7740/baxter'
 JETPACK_VERSION='4.4.1'
 CODE_NAME='xenial'
-TAG="latest"
+TAG="new"
 
 # setup pulseaudio cookie
 if [ x"$(pax11publish -d)" = x ]; then

@@ -49,6 +49,7 @@ docker run -it \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
+  -v "/usr/local/cuda" \
   --device=/dev/sda\
   --rm \
   --name jetson-agx-opengl-${TAG} \

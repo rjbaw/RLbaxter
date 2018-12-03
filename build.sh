@@ -3,7 +3,7 @@
 BUILD_DATE=$(date -u +'%Y-%m-%d-%H:%M:%S')
 CODE_NAME='xenial'
 LIBGLVND_VERSION='v1.1.0'
-JETPACK_VERSION='4.4.1'
+JETPACK_VERSION='4.1.1'
 TAG="jetpack-$JETPACK_VERSION-$CODE_NAME"
 
 # use tar to dereference the symbolic links from the current directory,

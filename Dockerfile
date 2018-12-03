@@ -106,7 +106,7 @@ RUN if [ "$BUILD_VERSION" = "3.3"   ]; then \
       wget -qO- https://developer.download.nvidia.com/devzone/devcenter/mobile/jetpack_l4t/3.3/lw.xd42/JetPackL4T_33_b39/Tegra186_Linux_R28.2.1_aarch64.tbz2 | \
       tar -xvj -C /tmp/ ; \
       cd /tmp/Linux_for_Tegra ; \
-    elif [ "$BUILD_VERSION" = "4.4.1" ]; then \
+    elif [ "$BUILD_VERSION" = "4.1.1" ]; then \
       echo "downloading jetpack-$BUILD_VERSION" ; \
 	  wget -qO- https://developer.download.nvidia.com/devzone/devcenter/mobile/jetpack_l4t/4.1.1/xddsn.im/JetPackL4T_4.1.1_b57/Jetson_Linux_R31.1.0_aarch64.tbz2 | \
       tar -xvj -C /tmp/ ; \
@@ -216,12 +216,35 @@ RUN mkdir -p $WORKON_HOME
 RUN /bin/bash -c "/usr/local/bin/virtualenvwrapper.sh"
 RUN echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
 
+# offline dependency
+RUN apt-get install -y ufw synaptic
+
+# CUDA cuDNN
+RUN curl $URL/cuda-repo-l4t-9-0-local_9.0.252-1_arm64.deb -so cuda-repo-l4t_arm64.deb
+RUN curl $URL/libcudnn7_7.0.5.15-1+cuda9.0_arm64.deb -so /tmp/libcudnn_arm64.deb
+RUN curl $URL/libcudnn7-dev_7.0.5.15-1+cuda9.0_arm64.deb -so /tmp/libcudnn-dev_arm64.deb
+RUN dpkg -i /tmp/cuda-repo-l4t_arm64.deb
+RUN apt-key add /var/cuda-repo-9-0-local/7fa2af80.pub
+RUN apt-get update && apt-get install -y cuda-toolkit-9.0
+RUN dpkg -i /tmp/libcudnn_arm64.deb
+RUN dpkg -i /tmp/libcudnn-dev_arm64.deb
+ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra
+
+# re-link libs in /usr/lib/tegra
+RUN ln -s /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.28.2.0 /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so
+RUN ln -s /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.28.2.0 /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.1
+RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libGL.so /usr/lib/aarch64-linux-gnu/libGL.so
+
 # initialize ros
 RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
 RUN rosdep init
 RUN rosdep update
 
 #RUN /bin/bash -c "~/.bashrc"
+
+#clean up
+RUN apt-get -y autoremove && apt-get -y autoclean
+RUN rm -rf /var/cache/apt
 
 EXPOSE 22
 
