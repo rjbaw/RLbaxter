@@ -14,7 +14,6 @@ fi
 # run container
 xhost +local:root
 docker run -it \
-  --user=$(id -u) \
   --device /dev/nvhost-as-gpu \
   --device /dev/nvhost-ctrl \
   --device /dev/nvhost-ctrl-gpu \
@@ -32,9 +31,6 @@ docker run -it \
   -e PULSE_COOKIE_DATA=`pax11publish -d | grep --color=never -Po '(?<=^Cookie: ).*'` \
   -e QT_GRAPHICSSYSTEM=native \
   -e QT_X11_NO_MITSHM=1 \
-  -e CONTAINER_NAME=ros-kinetic-dev \
-  -e USER=$USER \
-  --workdir=/home/$USER \
   -v /dev/shm:/dev/shm \
   -v /etc/localtime:/etc/localtime:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -44,12 +40,6 @@ docker run -it \
   -v ~/mount/data:/data \
   -v ~/mount/project:/project \
   -v ~/mount/tool:/tool \
-  -v "/etc/group:/etc/group:ro" \
-  -v "/etc/passwd:/etc/passwd:ro" \
-  -v "/etc/shadow:/etc/shadow:ro" \
-  -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
-  -v "/home/$USER/:/home/$USER/" \
-  --device=/dev/sda\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}

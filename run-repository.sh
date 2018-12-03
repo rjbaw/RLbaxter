@@ -1,9 +1,9 @@
 #!/bin/sh
 HOST_IP=`hostname -I | awk '{print $1}'`
-REPOSITORY='jetson-agx/opengl'
+REPOSITORY='ezvk7740/baxter'
 JETPACK_VERSION='4.4.1'
 CODE_NAME='xenial'
-TAG="jetpack-$JETPACK_VERSION-$CODE_NAME"
+TAG="latest"
 
 # setup pulseaudio cookie
 if [ x"$(pax11publish -d)" = x ]; then
