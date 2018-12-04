@@ -49,7 +49,8 @@ docker run -it \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
-  --device=/dev/sda\
+  -v "/mnt/sdb" \
+  --device=/dev/sda1\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}

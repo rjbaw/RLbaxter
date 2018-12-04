@@ -1,7 +1,7 @@
 #!/bin/sh
 HOST_IP=`hostname -I | awk '{print $1}'`
 REPOSITORY='jetson-agx/opengl'
-JETPACK_VERSION='4.4.1'
+JETPACK_VERSION='4.1.1'
 CODE_NAME='xenial'
 TAG="jetpack-$JETPACK_VERSION-$CODE_NAME"
 
@@ -49,8 +49,8 @@ docker run -it \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
-  -v "/usr/local/cuda" \
-  --device=/dev/sda\
+  -v /mnt/sdb:/mnt/sdb \
+  --device=/dev/sda1\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}
