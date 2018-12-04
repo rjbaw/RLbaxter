@@ -3,7 +3,7 @@ HOST_IP=`hostname -I | awk '{print $1}'`
 REPOSITORY='ezvk7740/baxter'
 JETPACK_VERSION='4.4.1'
 CODE_NAME='xenial'
-TAG="new"
+TAG="latest"
 
 # setup pulseaudio cookie
 if [ x"$(pax11publish -d)" = x ]; then
@@ -49,7 +49,7 @@ docker run -it \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
-  -v "/mnt/sdb" \
+  -v "/mnt/sdb:/mnt/sdb" \
   --device=/dev/sda1\
   --rm \
   --name jetson-agx-opengl-${TAG} \

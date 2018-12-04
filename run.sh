@@ -14,7 +14,6 @@ fi
 # run container
 xhost +local:root
 docker run -it \
-  --user=$(id -u) \
   --device /dev/nvhost-as-gpu \
   --device /dev/nvhost-ctrl \
   --device /dev/nvhost-ctrl-gpu \
@@ -34,22 +33,25 @@ docker run -it \
   -e QT_X11_NO_MITSHM=1 \
   -e CONTAINER_NAME=ros-kinetic-dev \
   -e USER=$USER \
-  --workdir=/home/$USER \
+  --workdir=/home/ubuntu \
+  -v /home/ubuntu:/ubuntu \
   -v /dev/shm:/dev/shm \
   -v /etc/localtime:/etc/localtime:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro \
   -v ${XDG_RUNTIME_DIR}/pulse/native:/run/user/1000/pulse/native \
-  -v ~/mount/backup:/backup \
-  -v ~/mount/data:/data \
-  -v ~/mount/project:/project \
-  -v ~/mount/tool:/tool \
+  -v ~/mount/backup:/home/backup \
+  -v ~/mount/data:/home/data \
+  -v ~/mount/project:/home/project \
+  -v ~/mount/tool:/home/tool \
   -v "/etc/group:/etc/group:ro" \
   -v "/etc/passwd:/etc/passwd:ro" \
   -v "/etc/shadow:/etc/shadow:ro" \
   -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
   -v /mnt/sdb:/mnt/sdb \
+  -v /usr/local/cuda:/usr/local/cuda \
+  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
   --device=/dev/sda1\
   --rm \
   --name jetson-agx-opengl-${TAG} \

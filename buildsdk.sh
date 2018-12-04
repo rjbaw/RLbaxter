@@ -48,7 +48,14 @@ catkin_make install
 #catkin_make
 #catkin_make install
 
+#finishing touches
+sudo ln -s /mnt/sdb/RLbaxter ~/RLbaxter
+cp ~/RLbaxter/shutdown.sh ~/ros_ws
+cp ~/RLbaxter/startup.sh ~/ros_ws
+sudo apt-get install ufw
+
 # baxter script
-wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
+#wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
+cp /mnt/sdb/RLbaxter/ros_ws/baxter.sh ~/ros_ws
 chmod u+x baxter.sh
 source devel/setup.bash

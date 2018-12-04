@@ -1,10 +1,8 @@
 #mkvirtualenv ros -p python3
-workon ros
+#workon ros
 
 #dependencies
 sudo apt-get install python-pip python3-pip -y
-pip install -U pip
-pip --version
 
 # rl toolbox
 sudo apt-get install swig
@@ -46,7 +44,28 @@ cd ~/usb
 sudo rm -r pytorch
 
 # tensorflow
-pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
+#pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
+sudo apt-get install  -y openjdk-8-jdk
+sudo pip3 install six mock h5py enum34
+# building bazel
+cd /mnt/sdb
+wget https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-dist.zip
+unzip bazel-0.15.2-dist.zip -d bazel-0.15.2-dist
+cd bazel-0.15.2-dist
+./compile.sh
+sudo cp output/bazel /usr/local/bin
+bazel help
+cd /mnt/sdb
+sudo rm -r bazel-0.15.2-dist
+# tf source code
+cd /mnt/sdb
+wget https://github.com/tensorflow/tensorflow/archive/v1.8.0.tar.gzi -O tensorflow-1.8.0.tar.gz
+tar xzvf tensorflow-1.8.0.tar.gz
+wget https://github.com/peterlee0127/tensorflow-nvJetson/blob/master/patch/tensorflow1.8.patch
+git apply tensorflow1.8.patch
+cd /mnt/sdb/src/tensorflow-1.8.0
+./configure
+
 
 # gym
 #cd ~/

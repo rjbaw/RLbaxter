@@ -1,8 +1,8 @@
-#!bin/bash
+#!bin/sh
 
-cd ~/ros_ws
-source devel/setup.bash
-./baxter.sh
+#cd ~/ros_ws
+#source devel/setup.bash
+#./baxter.sh
 rosrun baxter_tools enable_robot.py -s
 
 # reset 
