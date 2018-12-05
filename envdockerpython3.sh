@@ -1,46 +1,46 @@
-#mkvirtualenv ros -p python3
-#workon ros
+mkvirtualenv python3 -p python3.5
+workon python3
 
 #dependencies
 sudo apt-get install python-pip python3-pip -y
 
 # rl toolbox
-sudo apt-get install swig
-cd ~/RLbaxter/robotics-rl-srl
+sudo apt-get install swig -y
+cd /mnt/sdb/RLbaxter/robotics-rl-srl
 pip install -r requirements.text
 
-
 # OpenCV 3.4
-cd ~/usb
-git clone https://github.com/jetsonhacks/buildOpenCVTX2
-cd buildOpenCVTX2
-./buildOpenCV.sh
-./removeOpenCVSources.sh
-cd ~/usb
-sudo rm -r buildOpenCVTX2
-#cd ~/
-#git clone https://github.com/jetsonhacks/buildOpenCVXavier.git
-#cd buildOpenCVXavier
-#git checkout v1.0
+cd /mnt/sdb/RLbaxter
+python3 removepath.py
+#cd ~/usb
+#git clone https://github.com/jetsonhacks/buildOpenCVTX2
+#cd buildOpenCVTX2
 #./buildOpenCV.sh
 #./removeOpenCVSources.sh
+#cd ~/usb
+#sudo rm -r buildOpenCVTX2
+#cd /mnt/sdb
+#git clone https://github.com/jetsonhacks/buildOpenCVXavier.git
+cd ~/RLbaxter/BuildOpenCVXavier
+#git checkout v1.0
+./buildOpenCV.sh
+./removeOpenCVSources.sh
+cd ~/.virtualenvs/python3/lib/python3.5/site-packages
+ln -sf /usr/local/lib/python3.5/cv2.so cv2.so
 #cd ~/
 #sudo rm -r buildOpenCVXavier
 
 # pytorch
-cd ~/usb
-pip install ninja
-sudo apt-get install python-pip
-pip install -U pip
-pip --version
+cd /mnt/sdb
+pip3 install ninja pyyaml
 git clone http://github.com/pytorch/pytorch
 cd pytorch
 git submodule update --init
-sudo pip install -U setuptools
-sudo pip install -r requirements.txt
-python setup.py build_deps
-sudo python setup.py develop
-cd ~/usb
+sudo pip3 install -U setuptools
+sudo pip3 install -r requirements.txt
+python3 setup.py build_deps
+sudo python3 setup.py develop
+cd /mnt/sdb
 sudo rm -r pytorch
 
 # tensorflow
@@ -66,7 +66,6 @@ git apply tensorflow1.8.patch
 cd /mnt/sdb/src/tensorflow-1.8.0
 ./configure
 
-
 # gym
 #cd ~/
 #sudo apt-get install -y python-pyglet python3-opengl zlib1g-dev libjpeg-dev patchelf cmake swig libboost-all-dev libsdl2-dev libosmesa6-dev xvfb ffmpeg
@@ -76,17 +75,18 @@ cd /mnt/sdb/src/tensorflow-1.8.0
 #pip3 install -U 'mujoco-py<1.50.2,>=1.50.1'
 #pip install -e '.[all]'
 #pip install -e .
-pip install gym
+pip3 install gym
 #pip install 'gym[all]'
 #cd ~/
 #sudo rm -r gym
 
+
 # baselines
-cd ~/usb
+cd /mnt/sdb
 git clone https://github.com/openai/baselines.git
 cd baselines
 pip install -e .
-cd ~/usb
+cd /mnt/sdb
 sudo rm -r baselines
 
 
