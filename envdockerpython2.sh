@@ -1,7 +1,11 @@
 #dependencies
 sudo apt-get install python-pip python3-pip -y
-pip install -U pip
+#pip install -U pip breaks pip
+#sudo -H pip3 install --upgrade pip
+#sudo -H pip2 install --upgrade pip
+python -m pip install --upgrade pip
 pip --version
+sudo apt-get install python-scipy
 
 # rl toolbox
 sudo apt-get install swig
@@ -42,7 +46,8 @@ pip install -r requirements.text
 #sudo rm -r pytorch
 
 # tensorflow
-#pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
+pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
+#pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v411 tensorflow-gpu --user
 
 # gym
 #cd ~/

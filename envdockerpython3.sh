@@ -44,6 +44,7 @@ cd /mnt/sdb
 sudo rm -r pytorch
 
 # tensorflow
+pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v411 tensorflow-gpu --user
 #pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
 sudo apt-get install  -y openjdk-8-jdk
 sudo pip3 install six mock h5py enum34

@@ -1,17 +1,15 @@
 #!/bin/sh
 HOST_IP=`hostname -I | awk '{print $1}'`
-REPOSITORY='ezvk7740/baxter'
+REPOSITORY='jetson-agx/opengl'
 JETPACK_VERSION='4.4.1'
 CODE_NAME='xenial'
-TAG="gpu"
+TAG="jetpack-$JETPACK_VERSION-$CODE_NAME"
 
 # setup pulseaudio cookie
 if [ x"$(pax11publish -d)" = x ]; then
     start-pulseaudio-x11;
     echo `pax11publish -d | grep --color=never -Po '(?<=^Cookie: ).*'`
 fi
-
-#  --user=$(id -u) \
 
 # run container
 xhost +local:root
@@ -33,9 +31,6 @@ docker run -it \
   -e PULSE_COOKIE_DATA=`pax11publish -d | grep --color=never -Po '(?<=^Cookie: ).*'` \
   -e QT_GRAPHICSSYSTEM=native \
   -e QT_X11_NO_MITSHM=1 \
-  -e CONTAINER_NAME=ros-kinetic-dev \
-  -e USER=$USER \
-  --workdir=/home/$USER \
   -v /dev/shm:/dev/shm \
   -v /etc/localtime:/etc/localtime:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
@@ -45,16 +40,6 @@ docker run -it \
   -v ~/mount/data:/data \
   -v ~/mount/project:/project \
   -v ~/mount/tool:/tool \
-  -v "/etc/group:/etc/group:ro" \
-  -v "/etc/passwd:/etc/passwd:ro" \
-  -v "/etc/shadow:/etc/shadow:ro" \
-  -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
-  -v "/home/$USER/:/home/$USER/" \
-  -v "/mnt/sdb:/mnt/sdb" \
-  -v "/mnt/sdb:/mnt/sda" \
-  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
-  --device=/dev/sda\
-  --device=/dev/sdb1\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}

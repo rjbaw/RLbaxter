@@ -1,6 +1,6 @@
 #mkvirtualenv ros -p python3
 workon py3
-
+sudo apt-get install libblas-dev  liblapack-dev
 #dependencies
 sudo apt-get install python-pip python3-pip -y
 pip install -U pip

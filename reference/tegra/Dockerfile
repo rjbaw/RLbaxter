@@ -1,11 +1,8 @@
 # jetson-agx/opengl:jetpack-$BUILD_VERSION-xenial
 
+# build libglvnd
 ARG REPOSITORY
 ARG TAG
-
-# build libglvnd
-
-
 FROM ${REPOSITORY}:${TAG} as glvnd
 
 RUN apt-get update \
@@ -37,7 +34,7 @@ RUN git clone --branch="${LIBGLVND_VERSION}" https://github.com/NVIDIA/libglvnd.
 ARG REPOSITORY
 ARG TAG
 FROM ${REPOSITORY}:${TAG}
-LABEL maintainer "ezvk7740"
+LABEL maintainer "Elvis Dowson"
 
 # args
 ARG BUILD_VERSION
@@ -106,7 +103,7 @@ RUN if [ "$BUILD_VERSION" = "3.3"   ]; then \
       wget -qO- https://developer.download.nvidia.com/devzone/devcenter/mobile/jetpack_l4t/3.3/lw.xd42/JetPackL4T_33_b39/Tegra186_Linux_R28.2.1_aarch64.tbz2 | \
       tar -xvj -C /tmp/ ; \
       cd /tmp/Linux_for_Tegra ; \
-    elif [ "$BUILD_VERSION" = "4.1.1" ]; then \
+    elif [ "$BUILD_VERSION" = "4.4.1" ]; then \
       echo "downloading jetpack-$BUILD_VERSION" ; \
 	  wget -qO- https://developer.download.nvidia.com/devzone/devcenter/mobile/jetpack_l4t/4.1.1/xddsn.im/JetPackL4T_4.1.1_b57/Jetson_Linux_R31.1.0_aarch64.tbz2 | \
       tar -xvj -C /tmp/ ; \
@@ -169,8 +166,6 @@ docker run -it \
   -v ~/mount/data:/data \
   -v ~/mount/project:/project \
   -v ~/mount/tool:/tool \
-  -v /usr/local/cuda-10.0:/usr/local/cuda \
-  -v /usr/local/cuda-10.0/lib64:/usr/local/cuda/lib64 \
   --rm \
   --name jetson-agx-opengl-jetpack-$BUILD_VERSION-xenial \
   jetson-agx/opengl:jetpack-$BUILD_VERSION-xenial \
@@ -182,78 +177,5 @@ RUN echo \
 export NO_AT_BRIDGE=1\n\
 export PATH=/usr/local/cuda/bin:$PATH\n' \
     >> $HOME/.bashrc
-
-#install ros
-#SHELL ["/bin/bash", "-c"]
-
-RUN sh -c 'echo "deb http://packages.ros.org/ros/ubuntu $(lsb_release -sc) main" > /etc/apt/sources.list.d/ros-latest.list'
-RUN apt-key adv --keyserver hkp://ha.pool.sks-keyservers.net:80 --recv-key 421C365BD9FF1F717815A3895523BAEEB01FA116
-
-RUN apt-get update && apt-get install -y \
-    zsh \
-    curl \
-    wget \
-    vim \
-    nano \
-    sudo \
-    unzip 
-    #&& rm -rf /var/lib/apt/lists/*
-RUN apt-get update
-RUN apt-get -y install ros-kinetic-desktop-full
-RUN apt-get install -y gazebo7 ros-kinetic-qt-build ros-kinetic-gazebo-ros-control ros-kinetic-gazebo-ros-pkgs ros-kinetic-ros-control ros-kinetic-control-toolbox ros-kinetic-realtime-tools ros-kinetic-ros-controllers ros-kinetic-xacro python-wstool ros-kinetic-tf-conversions ros-kinetic-kdl-parser
-
-RUN apt-get install -y python-pip build-essential python3-pip
-# required to build certain python libraries
-RUN apt-get install python3-dev python-dev -y
-RUN apt-get install -y python3-dev python3-numpy python3-py python3-pytest
-RUN apt-get -y install python-rosinstall
-RUN apt-get -y install python-rosdep python-rosinstall-generator python-wstool python-rosinstall build-essential
-RUN pip install --upgrade pip 
-#RUN pip install --upgrade pip==9.0.3 caused errors
-
-# install and configure virtualenv
-RUN pip install virtualenv 
-RUN pip install virtualenvwrapper
-ENV WORKON_HOME ~/.virtualenvs
-RUN mkdir -p $WORKON_HOME
-RUN /bin/bash -c "/usr/local/bin/virtualenvwrapper.sh"
-RUN echo "source /usr/local/bin/virtualenvwrapper.sh" >> ~/.bashrc
-
-# offline dependency
-RUN apt-get install -y ufw synaptic
-
-# CUDA cuDNN
-ARG URL=https://developer.download.nvidia.com/devzone/devcenter/mobile/jetpack_l4t/3.2.1/m8u2ki/JetPackL4T_321_b23
-RUN curl $URL/cuda-repo-l4t-9-0-local_9.0.252-1_arm64.deb -so /tmp/cuda-repo-l4t_arm64.deb
-RUN curl $URL/libcudnn7_7.0.5.15-1+cuda9.0_arm64.deb -so /tmp/libcudnn_arm64.deb
-RUN curl $URL/libcudnn7-dev_7.0.5.15-1+cuda9.0_arm64.deb -so /tmp/libcudnn-dev_arm64.deb
-RUN dpkg -i /tmp/cuda-repo-l4t_arm64.deb
-RUN apt-key add /var/cuda-repo-9-0-local/7fa2af80.pub
-RUN apt-get update && apt-get install -y cuda-toolkit-9.0
-RUN dpkg -i /tmp/libcudnn_arm64.deb
-RUN dpkg -i /tmp/libcudnn-dev_arm64.deb
-#ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/tegra
-
-# re-link libs in /usr/lib/tegra
-#RUN ln -s /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.28.2.0 /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so
-#RUN ln -s /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.28.2.0 /usr/lib/aarch64-linux-gnu/tegra/libnvidia-ptxjitcompiler.so.1
-#RUN ln -sf /usr/lib/aarch64-linux-gnu/tegra/libGL.so /usr/lib/aarch64-linux-gnu/libGL.so
-
-#CUDA 10
-#ENV LD_LIBRARY_PATH=$LD_LIBRARY_PATH:/usr/lib/aarch64-linux-gnu/
-
-# initialize ros
-RUN echo "source /opt/ros/kinetic/setup.bash" >> ~/.bashrc
-RUN rosdep init
-RUN rosdep update
-
-#RUN /bin/bash -c "~/.bashrc"
-
-#clean up
-RUN apt-get -y autoremove && apt-get -y autoclean
-RUN rm -rf /var/cache/apt
-RUN ln -s /mnt/sdb/RLbaxter ~/
-
-EXPOSE 22
 
 CMD ["bash"]
