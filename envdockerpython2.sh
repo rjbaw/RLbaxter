@@ -1,9 +1,9 @@
 #dependencies
 sudo apt-get install python-pip python3-pip -y
-#pip install -U pip breaks pip
+pip install -U pip
 #sudo -H pip3 install --upgrade pip
 #sudo -H pip2 install --upgrade pip
-python -m pip install --upgrade pip
+#python -m pip install --upgrade pip
 pip --version
 sudo apt-get install python-scipy
 
