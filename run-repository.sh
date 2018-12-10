@@ -3,7 +3,7 @@ HOST_IP=`hostname -I | awk '{print $1}'`
 REPOSITORY='ezvk7740/baxter'
 JETPACK_VERSION='4.4.1'
 CODE_NAME='xenial'
-TAG="gpu"
+TAG="cuda9base"
 
 # setup pulseaudio cookie
 if [ x"$(pax11publish -d)" = x ]; then
@@ -52,10 +52,11 @@ docker run -it \
   -v "/home/$USER/:/home/$USER/" \
   -v "/mnt/sdb:/mnt/sdb" \
   -v "/mnt/sdb:/mnt/sda" \
-  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
   --device=/dev/sda\
   --device=/dev/sdb1\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}
 xhost -local:root
+
+#  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \

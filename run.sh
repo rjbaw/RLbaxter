@@ -11,6 +11,8 @@ if [ x"$(pax11publish -d)" = x ]; then
     echo `pax11publish -d | grep --color=never -Po '(?<=^Cookie: ).*'`
 fi
 
+#  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
+
 # run container
 xhost +local:root
 docker run -it \
@@ -31,26 +33,15 @@ docker run -it \
   -e PULSE_COOKIE_DATA=`pax11publish -d | grep --color=never -Po '(?<=^Cookie: ).*'` \
   -e QT_GRAPHICSSYSTEM=native \
   -e QT_X11_NO_MITSHM=1 \
-  -e CONTAINER_NAME=ros-kinetic-dev \
   -e USER=$USER \
-  --workdir=/home/ubuntu \
-  -v /home/ubuntu:/ubuntu \
+  --workdir=/home/$USER \
   -v /dev/shm:/dev/shm \
   -v /etc/localtime:/etc/localtime:ro \
   -v /tmp/.X11-unix:/tmp/.X11-unix \
   -v /var/run/dbus/system_bus_socket:/var/run/dbus/system_bus_socket:ro \
   -v ${XDG_RUNTIME_DIR}/pulse/native:/run/user/1000/pulse/native \
-  -v ~/mount/backup:/home/backup \
-  -v ~/mount/data:/home/data \
-  -v ~/mount/project:/home/project \
-  -v ~/mount/tool:/home/tool \
-  -v "/etc/group:/etc/group:ro" \
-  -v "/etc/passwd:/etc/passwd:ro" \
-  -v "/etc/shadow:/etc/shadow:ro" \
-  -v "/etc/sudoers.d:/etc/sudoers.d:ro" \
   -v "/home/$USER/:/home/$USER/" \
   -v /mnt/sdb:/mnt/sdb \
-  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
   --device=/dev/sda\
   --rm \
   --name jetson-agx-opengl-${TAG} \

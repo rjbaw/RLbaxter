@@ -84,10 +84,11 @@ pip3 install gym
 
 # baselines
 cd /mnt/sdb
-git clone https://github.com/openai/baselines.git
-cd baselines
-pip install -e .
-cd /mnt/sdb
+#git clone https://github.com/openai/baselines.git
+#cd baselines
+#pip install -e .
+#cd /mnt/sdb
 sudo rm -r baselines
-
+git clone https://github.com/hill-a/stable-baselines && cd stable-baselines
+pip install -e .[docs,tests]
 

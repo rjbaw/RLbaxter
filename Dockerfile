@@ -169,12 +169,13 @@ docker run -it \
   -v ~/mount/data:/data \
   -v ~/mount/project:/project \
   -v ~/mount/tool:/tool \
-  -v /usr/local/cuda-10.0:/usr/local/cuda \
-  -v /usr/local/cuda-10.0/lib64:/usr/local/cuda/lib64 \
   --rm \
   --name jetson-agx-opengl-jetpack-$BUILD_VERSION-xenial \
   jetson-agx/opengl:jetpack-$BUILD_VERSION-xenial \
 xhost -local:root"
+
+#  -v /usr/local/cuda-10.0:/usr/local/cuda \
+#  -v /usr/local/cuda-10.0/lib64:/usr/local/cuda/lib64 \
 
 # update .bashrc
 RUN echo \

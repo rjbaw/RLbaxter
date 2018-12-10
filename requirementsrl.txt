@@ -1,3 +1,12 @@
-sudo apt-get update && sudo apt-get install cmake libopenmpi-dev python3-dev zlib1g-dev
-pip install mpi4dev
-pip install cloudpickle
+mpi4dev
+cloudpickle
+cma
+torchvision
+pybullet
+visdom
+hyperopt
+cython
+echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" >> /etc/apt/sources.list
+wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
+apt-get install libzmq3-dev
+zmq

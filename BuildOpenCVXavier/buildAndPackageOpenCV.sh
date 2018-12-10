@@ -233,6 +233,9 @@ else
   fi
 fi
 
+### virtualenv=py3
+cd ~/.virtualenvs/py3/lib/python3.6/site-packages/
+ln -s /usr/local/lib/python3.6/site-packages/cv2.cpython-36m-aarch64-linux-gnu.so cv2.so
 
 # check installation
 IMPORT_CHECK="$(python -c "import cv2 ; print(cv2.__version__)")"
