@@ -7,6 +7,14 @@ pip install -U pip
 pip --version
 sudo apt-get install python-scipy
 
+echo "deb http://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/ ./" >> /etc/apt/sources.list
+wget https://download.opensuse.org/repositories/network:/messaging:/zeromq:/release-stable/Debian_9.0/Release.key -O- | sudo apt-key add
+sudo apt-get install libzmq3-dev
+
+pip install cython
+pip install zmq
+
+
 # rl toolbox
 sudo apt-get install swig
 cd ~/RLbaxter/robotics-rl-srl
@@ -59,7 +67,7 @@ pip install --extra-index-url https://developer.download.nvidia.com/compute/redi
 #pip3 install -U 'mujoco-py<1.50.2,>=1.50.1'
 #pip install -e '.[all]'
 #pip install -e .
-#pip install gym
+pip install gym
 #pip install 'gym[all]'
 #cd ~/
 #sudo rm -r gym

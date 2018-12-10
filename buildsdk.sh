@@ -29,9 +29,17 @@ wstool init .
 wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter/master/baxter_sdk.rosinstall -y
 wstool merge https://raw.githubusercontent.com/RethinkRobotics/baxter_simulator/kinetic-devel/baxter_simulator.rosinstall -y
 wstool update
+git clone https://github.com/NataliaDiaz/arm_scenario_experiments.git
+cd arm_scenario_experiments
+git checkout rl
+cd ~/ros_ws/src
+git clone https://github.com/araffin/arm_scenario_simulator.git
 cd ~/ros_ws
 catkin_make
 catkin_make install
+
+#echo "export GAZEBO_MODEL_PATH=$(rospack find arm_scenario_simulator)/models:$GAZEBO_MODEL_PATH" >> ~/.bashrc
+echo "export GAZEBO_MODEL_PATH=~/ros_ws/src/arm_scenario_simulator/models:$GAZEBO_MODEL_PATH" >> ~/.bashrc
 
 # move-it
 #sudo apt-get install ros-kinetic-moveit
@@ -52,7 +60,7 @@ catkin_make install
 sudo ln -s /mnt/sdb/RLbaxter ~/RLbaxter
 cp ~/RLbaxter/shutdown.sh ~/ros_ws
 cp ~/RLbaxter/startup.sh ~/ros_ws
-sudo apt-get install ufw
+sudo apt-get install -y ufw
 
 # baxter script
 #wget https://github.com/RethinkRobotics/baxter/raw/master/baxter.sh
