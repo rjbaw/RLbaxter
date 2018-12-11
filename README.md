@@ -19,3 +19,7 @@ https://docs.docker.com/
 http://wiki.ros.org/ROS/Tutorials
 
 http://wiki.ros.org/docker/Tutorials
+
+Built docker images from this repo
+
+https://hub.docker.com/r/ezvk7740/baxter/
