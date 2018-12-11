@@ -8,7 +8,7 @@ https://github.com/araffin/robotics-rl-srl
 
 https://github.com/jetsonhacks/buildOpenCVXavier
 
-https://devtalk.nvidia.com/default/topic/1044051/jetson-agx-xavier/docker-gpu-acceleration-on-jetson-agx-for-ubuntu-16-04-image-using-jetpack-4-4-1/
+https://github.com/Technica-Corporation/Tegra-Docker#device-parameters
 
 https://github.com/hill-a/stable-baselines
 
