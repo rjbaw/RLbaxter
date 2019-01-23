@@ -9,7 +9,7 @@ from enum import Enum
 #HOSTNAME = 'localhost'
 SERVER_PORT = 46247
 HOSTNAME = 'jetson-0423318029132'
-USING_REAL_BAXTER = False
+USING_REAL_BAXTER = True
 USING_ROBOBO = False
 
 assert not (USING_ROBOBO and USING_REAL_BAXTER), "You can only use one real robot at a time"

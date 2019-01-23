@@ -52,11 +52,17 @@ docker run -it \
   -v "/home/$USER/:/home/$USER/" \
   -v "/mnt/sdb:/mnt/sdb" \
   -v "/mnt/sdb:/mnt/sda" \
+  --network="host"\
   --device=/dev/sda\
   --device=/dev/sdb1\
+  --expose 11311\
+  --cap-add=NET_ADMIN\
+  --cap-add=NET_RAW\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}
 xhost -local:root
 
 #  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
+
+

@@ -19,12 +19,12 @@ unset your_hostname
 # will be overwritten by any variables set here.
 
 # Specify Baxter's hostname
-baxter_hostname="011311P0016.local"
+#baxter_hostname="011311P0016.local"
 
 # Set *Either* your computers ip address or hostname. Please note if using
 # your_hostname that this must be resolvable to Baxter.
 #your_ip="192.168.XXX.XXX"
-your_hostname="jetson-0423318029132.local"
+#your_hostname="jetson-0423318029132.local"
 
 # Specify ROS distribution (e.g. indigo, hydro, etc.)
 ros_version="kinetic"
