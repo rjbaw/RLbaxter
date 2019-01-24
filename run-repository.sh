@@ -55,9 +55,11 @@ docker run -it \
   --network="host"\
   --device=/dev/sda\
   --device=/dev/sdb1\
-  --expose 11311\
+  -p 11311:11311\
   --cap-add=NET_ADMIN\
   --cap-add=NET_RAW\
+  --add-host=docker:10.154.148.1\
+  --add-host=011311P0016.local:192.168.0.101\
   --rm \
   --name jetson-agx-opengl-${TAG} \
   ${REPOSITORY}:${TAG}

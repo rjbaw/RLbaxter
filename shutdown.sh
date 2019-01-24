@@ -1,4 +1,4 @@
-#!bin/sh
+#!/bin/sh
 
 #cd ~/ros_ws
 #source devel/setup.bash

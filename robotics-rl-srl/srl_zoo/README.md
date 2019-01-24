@@ -28,10 +28,11 @@ Available methods:
 - **[experimental]** Reward Prior, Episode-prior, Perceptual Similarity loss (DARLA), Mutual Information loss
 
 Related papers:
+- "Decoupling feature extraction from policy learning: assessing benefits of state representation learning in goal based robotics" (Raffin et al. 2018) [https://openreview.net/forum?id=Hkl-di09FQ](https://openreview.net/forum?id=Hkl-di09FQ)
 - "S-RL Toolbox: Environments, Datasets and Evaluation Metrics for State Representation Learning" (Raffin et al., 2018) [https://arxiv.org/abs/1809.09369](https://arxiv.org/abs/1809.09369)
 - "State Representation Learning for Control: An Overview" (Lesort et al., 2018), link: [https://arxiv.org/pdf/1802.04181.pdf](https://arxiv.org/pdf/1802.04181.pdf)
 
-<a href="https://drive.google.com/file/d/153oxiwHyK2W9nU3avEi0b0O4qjo7WD0X/view"><img src="imgs/rl_toolboxplay.jpg"/></a>
+<a href="https://www.youtube.com/watch?v=qNsHMkIsqJc"><img src="imgs/rl_toolboxplay.jpg"/></a>
 
 ## Documentation
 

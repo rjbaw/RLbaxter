@@ -4,6 +4,7 @@ cd ~/ros_ws
 #source /opt/ros/kinetic/setup.bash
 #source ~/ros_ws/devel/setup.bash
 #~/ros_ws/./baxter.sh
+ufw disable
 rosrun baxter_tools enable_robot.py -s
 # reset if emergency stopped
 # rosrun baxter_tools enable_robot.py –r
