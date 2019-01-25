@@ -55,7 +55,6 @@ docker run -it \
   --network="host"\
   --device=/dev/sda\
   --device=/dev/sdb1\
-  -p 11311:11311\
   --cap-add=NET_ADMIN\
   --cap-add=NET_RAW\
   --add-host=docker:10.154.148.1\

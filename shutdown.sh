@@ -3,6 +3,7 @@
 #cd ~/ros_ws
 #source devel/setup.bash
 #./baxter.sh
+ufw disable
 rosrun baxter_tools enable_robot.py -s
 
 # reset 

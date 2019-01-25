@@ -5,10 +5,8 @@ from enum import Enum
 
 # ==== CONSTANTS FOR BAXTER ROBOT ====
 # Socket port
-#SERVER_PORT = 7777
-#HOSTNAME = 'localhost'
 SERVER_PORT = 46247
-HOSTNAME = 'jetson-0423318029132'
+HOSTNAME = 'localhost'
 USING_REAL_BAXTER = True
 USING_ROBOBO = False
 

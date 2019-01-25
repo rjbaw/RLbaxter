@@ -77,7 +77,7 @@ baxter_position = arm_utils.point2array(baxter_pose.position)
 baxter_orientation = arm_utils.quat2array(baxter_pose.orientation)
 
 # ===== Get list of allowed actions ====
-possible_actions = getActions(DELTA_POS, n_actions=6 )
+possible_actions = getActions(DELTA_POS, n_actions=6)
 rospy.sleep(1)
 
 print("Initializing robot...")
