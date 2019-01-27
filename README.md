@@ -9,7 +9,7 @@ How this works:
 
 ROS Kinetic nodes complete with Baxter SDK are run in Docker container with minimum network isolation as the host.
 Host should able to access ROS master interally using published ports
-by including this into your .bashrc file
+by including this into your host .bashrc file
 
 
 export ROS_HOSTNAME=yourhostname.local
@@ -29,7 +29,7 @@ The steps below would leave you with no firewall so proceed with caution
 
 How to use:
 
-1. Pull the lastest dated image from docker hub
+1. Pull the latest dated image from docker hub
 2. Clone this repository
 3. ./run-repository.sh
 4. To enable/disable robot:
