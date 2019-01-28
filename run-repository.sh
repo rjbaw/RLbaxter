@@ -57,7 +57,6 @@ docker run -it \
   --device=/dev/sdb1\
   --cap-add=NET_ADMIN\
   --cap-add=NET_RAW\
-  --add-host=docker:10.154.148.1\
   --add-host=011311P0016.local:192.168.0.101\
   --rm \
   --name jetson-agx-opengl-${TAG} \
@@ -65,5 +64,5 @@ docker run -it \
 xhost -local:root
 
 #  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
-
+#  --add-host=docker:10.154.148.1\
 
