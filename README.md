@@ -1,6 +1,45 @@
 Rethink Robotics Baxter on Nvidia Jetson Xavier
 
+
 Using ROS Kinetic in Ubuntu 16.04 docker
+
+
+How this works:
+
+
+ROS Kinetic nodes complete with Baxter SDK are run in Docker container with minimum network isolation as the host.
+Host should able to access ROS master interally using published ports
+by including this into your host .bashrc file
+
+
+export ROS_HOSTNAME=yourhostname.local
+
+export ROS_MASTER_URI=http://yourhostname.local:publishedport/
+
+
+DNS linking is done manually, container is able to connect to robot using static ip specified into 
+/etc/hosts file
+This is done via run-repository.sh bashscript
+
+
+
+
+***Warning***
+The steps below would leave you with no firewall so proceed with caution
+
+How to use:
+
+1. Pull the latest dated image from docker hub
+2. Clone this repository
+3. ./run-repository.sh
+4. To enable/disable robot:
+./startup.sh
+./shutdown.sh
+
+
+**Note** 
+This is still a work in progress, so if you have any issues feel free to contact me directly.
+
 
 Special thanks to 
 
