@@ -37,9 +37,12 @@ if USING_REAL_BAXTER:
     # Max number of steps per episode
     MAX_STEPS = 100
     # ROS Topics
-    IMAGE_TOPIC = "/kinect2/qhd/image_color"
+   # IMAGE_TOPIC = "/kinect2/qhd/image_color"
+   # IMAGE_TOPIC = "/camera/rgb/image_raw"
+    IMAGE_TOPIC = "/cameras/head_camera_2/image"
     # Set the second cam topic to None if there is only one camera
-    SECOND_CAM_TOPIC = "/camera/rgb/image_raw"
+   # SECOND_CAM_TOPIC = "/camera/left_hand_camera/image"
+    SECOND_CAM_TOPIC = None
     DATA_FOLDER_SECOND_CAM = "real_baxter_second_cam"
 elif USING_ROBOBO:
     # ROS Topics
