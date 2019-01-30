@@ -7,7 +7,7 @@ from enum import Enum
 # Socket port
 SERVER_PORT = 46247
 HOSTNAME = 'localhost'
-USING_REAL_BAXTER = False
+USING_REAL_BAXTER = True
 USING_ROBOBO = False
 
 assert not (USING_ROBOBO and USING_REAL_BAXTER), "You can only use one real robot at a time"
@@ -39,10 +39,11 @@ if USING_REAL_BAXTER:
     # ROS Topics
    # IMAGE_TOPIC = "/kinect2/qhd/image_color"
    # IMAGE_TOPIC = "/camera/rgb/image_raw"
-    IMAGE_TOPIC = "/cameras/head_camera_2/image"
+    IMAGE_TOPIC = "/cameras/head_camera/image"
+   # IMAGE_TOPIC = "/cameras/left_hand_camera/image"
     # Set the second cam topic to None if there is only one camera
    # SECOND_CAM_TOPIC = "/camera/left_hand_camera/image"
-    SECOND_CAM_TOPIC = None
+    SECOND_CAM_TOPIC = "/cameras/right_hand_camera/image"
     DATA_FOLDER_SECOND_CAM = "real_baxter_second_cam"
 elif USING_ROBOBO:
     # ROS Topics
