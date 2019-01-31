@@ -42,8 +42,10 @@ if USING_REAL_BAXTER:
     IMAGE_TOPIC = "/cameras/head_camera/image"
    # IMAGE_TOPIC = "/cameras/left_hand_camera/image"
     # Set the second cam topic to None if there is only one camera
-   # SECOND_CAM_TOPIC = "/camera/left_hand_camera/image"
-    SECOND_CAM_TOPIC = "/cameras/right_hand_camera/image"
+    SECOND_CAM_TOPIC = "/cameras/left_hand_camera/image"
+   # SECOND_CAM_TOPIC = "/cameras/right_hand_camera/image"
+   # SECOND_CAM_TOPIC = "/cameras/head_camera/image"
+   # SECOND_CAM_TOPIC = None
     DATA_FOLDER_SECOND_CAM = "real_baxter_second_cam"
 elif USING_ROBOBO:
     # ROS Topics
