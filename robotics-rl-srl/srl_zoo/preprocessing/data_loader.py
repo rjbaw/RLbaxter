@@ -202,7 +202,8 @@ class DataLoader(object):
         :return: (th.Tensor)
         """
         # Remove trailing .jpg if present
-        image_path = 'data/' + image_path.split('.jpg')[0]
+        #image_path = 'data/' + image_path.split('.jpg')[0]
+        image_path = image_path.split('.jpg')[0]
 
         if multi_view:
             images = []
