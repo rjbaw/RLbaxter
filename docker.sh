@@ -1,7 +1,8 @@
 #!bin/sh
 
 # migrate docker symbolic
-sudo cp -rp /var/lib/docker /mnt/sdb/
+#sudo cp -rp /var/lib/docker /mnt/sdb/
+sudo mv /var/lib/docker /mnt/sdb
 sudo ln -s /mnt/sdb/docker /var/lib/docker
 
 #reload
