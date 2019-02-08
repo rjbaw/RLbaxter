@@ -2,27 +2,37 @@
 
 A collection of State Representation Learning (SRL) methods for Reinforcement Learning, written using PyTorch.
 
-S-RL Toolbox Documentation: https://s-rl-toolbox.readthedocs.io/en/latest/
+<img src="imgs/enjoy-latent-real-baxter.gif" align="right" width="50%"/>
+
+SRL Zoo Documentation: https://srl-zoo.readthedocs.io/
+
+S-RL Toolbox Documentation: https://s-rl-toolbox.readthedocs.io/
 
 S-RL Toolbox Repository: https://github.com/araffin/robotics-rl-srl
 
+
 Available methods:
 
-- SRL with Robotic Priors + extensions (stereovision, additional priors)
+- Autoencoder (reconstruction loss)
 - Denoising Autoencoder (DAE)
+- Forward Dynamics model
+- Inverse Dynamics model
+- Reward prediction loss
 - Variational Autoencoder (VAE) and beta-VAE
-- PCA
+- SRL with Robotic Priors + extensions (stereovision, additional priors)
 - Supervised Learning
-- Forward, Inverse Models
+- Principal Component Analysis (PCA)
 - Triplet Network (for stereovision only)
-- Reward loss
 - Combination and stacking of methods
 - Random Features
 - **[experimental]** Reward Prior, Episode-prior, Perceptual Similarity loss (DARLA), Mutual Information loss
 
 Related papers:
+- "Decoupling feature extraction from policy learning: assessing benefits of state representation learning in goal based robotics" (Raffin et al. 2018) [https://openreview.net/forum?id=Hkl-di09FQ](https://openreview.net/forum?id=Hkl-di09FQ)
 - "S-RL Toolbox: Environments, Datasets and Evaluation Metrics for State Representation Learning" (Raffin et al., 2018) [https://arxiv.org/abs/1809.09369](https://arxiv.org/abs/1809.09369)
 - "State Representation Learning for Control: An Overview" (Lesort et al., 2018), link: [https://arxiv.org/pdf/1802.04181.pdf](https://arxiv.org/pdf/1802.04181.pdf)
+
+<a href="https://www.youtube.com/watch?v=qNsHMkIsqJc"><img src="imgs/rl_toolboxplay.jpg"/></a>
 
 ## Documentation
 
@@ -58,6 +68,13 @@ uses the distance between the reconstructed input and real input in the embeddin
 
 
 All possible arguments can be display using `python train.py --help`. You can limit the training set size (`--training-set-size` argument), change the minibatch size (`-bs`), number of epochs (`--epochs`), ...
+
+## Datasets: Simulated Environments and Real Robots
+
+Although the data can be generated easily using the RL repo in simulation (cf [Generating Data](https://s-rl-toolbox.readthedocs.io/en/latest/guide/envs.html#generating-data)), we provide datasets with a real baxter:
+
+- [Dataset 1](https://mega.nz/#!kN8gTbDQ!s0dRO5TmsNAorIhSsPvPeflaH-r7uYPKgUF2c5Fxxqk)
+- [Dataset 2](https://mega.nz/#!AcVkCJgA!mPzXkY3jkM3BPfCN5LGSi9pZfD6urf0m5wTCtkk1_uk) with multiple cameras
 
 
 ### Examples
