@@ -1,6 +1,9 @@
 *Warning*
+
 Repository is still fixing its problems
+
 for immediate use, look to docker image in the link provided below
+
 
 Ongoing problems when training with stable-baselines
 - Environment does not accept additional arguments
