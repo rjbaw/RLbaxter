@@ -1,4 +1,4 @@
-#!/bin/sh
+1#!/bin/sh
 HOST_IP=`hostname -I | awk '{print $1}'`
 REPOSITORY='ezvk7740/baxter'
 JETPACK_VERSION='4.4.1'
@@ -54,7 +54,6 @@ docker run -it \
   -v "/mnt/sdb:/mnt/sda" \
   --network="host"\
   --device=/dev/sda\
-  --device=/dev/sdb1\
   --cap-add=NET_ADMIN\
   --cap-add=NET_RAW\
   --add-host=011311P0016.local:192.168.0.101\
@@ -65,4 +64,6 @@ xhost -local:root
 
 #  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
 #  --add-host=docker:10.154.148.1\
+
+#  --device=/dev/sdb1\
 

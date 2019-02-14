@@ -55,11 +55,20 @@ registered_env = {
 if isXAvailable():
     # Catch if X available, but GL context unavailable. 
     # This prevents SSH crashing when X is passed without GL context.
+
+#    try:
+#        from environments.car_racing.car_env import CarRacingEnv
+#        registered_env["CarRacingGymEnv-v0"] = (CarRacingEnv, SRLGymEnv, PlottingType.PLOT_2D, ThreadingType.NONE)
+#    except:
+#        pass
+
     try:
-        from environments.car_racing.car_env import CarRacingEnv
-        registered_env["CarRacingGymEnv-v0"] = (CarRacingEnv, SRLGymEnv, PlottingType.PLOT_2D, ThreadingType.NONE)
+        from environments.gym_baxter.baxter_env import BaxterEnv
+        registered_env["Baxter-v0"] = (BaxterEnv, SRLGymEnv, PlottingType.PLOT_3D, ThreadingType.NONE)
     except:
         pass
+
+   
 
 
 for name, (env_class, _, _, _) in registered_env.items():
