@@ -7,6 +7,7 @@ import json
 import os
 import sys
 import time
+from functools import partial
 from datetime import datetime
 from pprint import pprint
 

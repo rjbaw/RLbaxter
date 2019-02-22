@@ -8,9 +8,6 @@ for immediate use, look to docker image in the link provided below
 Ongoing problems when training with stable-baselines
 
 - Environment does not accept additional arguments (Does not work on both Jetson and amd64 architectures)
-- Multiprocessing problems on multiple gpu threads in envs.render()
-
-two of the problems is traced back to OpenAI gym, looking for potential fixes
 
 
 Roadmap:

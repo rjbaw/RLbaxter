@@ -22,7 +22,6 @@ def getImage(srl_model, state, device):
     """
     Gets an image by using the decoder of a SRL model
     (when available)
-
     :param srl_model: (Pytorch model)
     :param state: ([float]) the state vector from latent space
     :param device: (pytorch device)
@@ -90,7 +89,7 @@ def main():
     X = np.array(list(data.values())).astype(float)
     y = list(data.keys())
 
-    bound_max, bound_min, fig_names, srl_model_knn = {}, {}, {}, {}
+    bound_max, bound_min, fig_names,srl_model_knn = {}, {}, {}, {}
     start_indices, end_indices = {}, {}
     start_idx = 0
 
@@ -151,4 +150,4 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+main()

@@ -58,7 +58,7 @@ if isXAvailable():
 
 #    try:
 #        from environments.car_racing.car_env import CarRacingEnv
-#        registered_env["CarRacingGymEnv-v0"] = (CarRacingEnv, SRLGymEnv, PlottingType.PLOT_2D, ThreadingType.NONE)
+#        registered_env["CarRacingGymEnv-v0"] = (CarRacingEnv, SRLGymEnv, PlottingType.PLOT_2D, #ThreadingType.NONE)
 #    except:
 #        pass
 

@@ -1,5 +1,6 @@
 from collections import OrderedDict
 from multiprocessing import Queue, Process
+from tensorflow.python.client import device_lib
 
 import numpy as np
 import tensorflow as tf
@@ -13,17 +14,21 @@ from srl_zoo.utils import printYellow, printGreen
 from state_representation.models import loadSRLModel, getSRLDim
 
 
+#	return [x.name for x in local_device_protos if x.device_type == 'GPU']
+#	local_device_protos = device_lib.list_local_devices()
+
+
 def createTensorflowSession():
     """
     Create tensorflow session with specific argument
     to prevent it from taking all gpu memory
     """
+
     # Let Tensorflow choose the device
     config = tf.ConfigProto(allow_soft_placement=True)
     # Prevent tensorflow from taking all the gpu memory
     config.gpu_options.allow_growth = True
     tf.Session(config=config).__enter__()
-
 
 def computeMeanReward(log_dir, last_n_episodes, is_es=False, return_n_episodes=False):
     """
