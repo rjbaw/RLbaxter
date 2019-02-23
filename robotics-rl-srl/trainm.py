@@ -17,10 +17,14 @@ import yaml
 from stable_baselines.common import set_global_seeds
 from visdom import Visdom
 
+# GPU processing
 import multiprocessing
+import platform
+import tensorflow as tf
 from mpi4py import MPI
 from tensorflow.python.client import device_lib
 from baselines import logger
+
 
 from environments.registry import registered_env
 from environments.srl_env import SRLGymEnv
@@ -178,6 +182,43 @@ def callback(_locals, _globals):
     n_steps += 1
     return True
 
+# Multithreading fix
+
+def guess_available_gpus(n_gpus=None):
+
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
+def setup_mpi_gpus():
+    """
+    Set CUDA_VISIBLE_DEVICES using MPI.
+    """
+    available_gpus = guess_available_gpus()
+
+    node_id = platform.node()
+    nodes_ordered_by_rank = MPI.COMM_WORLD.allgather(node_id)
+    processes_outranked_on_this_node = [n for n in nodes_ordered_by_rank[:MPI.COMM_WORLD.Get_rank()] if n == node_id]
+    local_rank = len(processes_outranked_on_this_node)
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(available_gpus[local_rank])
+
+def guess_available_cpus():
+    return int(multiprocessing.cpu_count())
+
+def setup_tensorflow_session():
+    num_cpu = guess_available_cpus()
+
+    tf_config = tf.ConfigProto(
+        inter_op_parallelism_threads=num_cpu,
+        intra_op_parallelism_threads=num_cpu
+    )
+    return tf.Session(config=tf_config)
+
+def get_experiment_environment():
+
+    setup_mpi_gpus()
+    tf_context = setup_tensorflow_session()
+    return tf_context
+tf_sess = get_experiment_environment()
 
 def main():
     # Global variables for callback
@@ -327,8 +368,9 @@ def main():
     # Get the hyperparameter, if given (Hyperband)
     hyperparams = {param.split(":")[0]: param.split(":")[1] for param in args.hyperparam}
     hyperparams = algo.parserHyperParam(hyperparams)
+    with tf_sess:
     # Train the agent
-    algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
+        algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
 
 
 if __name__ == '__main__':
