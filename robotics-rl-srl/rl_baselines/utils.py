@@ -1,6 +1,5 @@
 from collections import OrderedDict
 from multiprocessing import Queue, Process
-from tensorflow.python.client import device_lib
 
 import numpy as np
 import tensorflow as tf
@@ -13,22 +12,65 @@ from rl_baselines.visualize import loadCsv
 from srl_zoo.utils import printYellow, printGreen
 from state_representation.models import loadSRLModel, getSRLDim
 
+# GPU processing
 
-#	return [x.name for x in local_device_protos if x.device_type == 'GPU']
-#	local_device_protos = device_lib.list_local_devices()
+import multiprocessing
+import platform
+from mpi4py import MPI
+from tensorflow.python.client import device_lib
+from baselines import logger
 
+
+# Multithreading fix
+
+def guess_available_gpus(n_gpus=None):
+
+    local_device_protos = device_lib.list_local_devices()
+    return [x.name for x in local_device_protos if x.device_type == 'GPU']
+
+def setup_mpi_gpus():
+    """
+    Set CUDA_VISIBLE_DEVICES using MPI.
+    """
+    available_gpus = guess_available_gpus()
+
+    node_id = platform.node()
+    nodes_ordered_by_rank = MPI.COMM_WORLD.allgather(node_id)
+    processes_outranked_on_this_node = [n for n in nodes_ordered_by_rank[:MPI.COMM_WORLD.Get_rank()] if n == node_id]
+    local_rank = len(processes_outranked_on_this_node)
+    os.environ['CUDA_VISIBLE_DEVICES'] = str(available_gpus[local_rank])
+
+def guess_available_cpus():
+    return int(multiprocessing.cpu_count())
+
+def setup_tensorflow_session():
+    num_cpu = guess_available_cpus()
+
+    tf_config = tf.ConfigProto(
+        inter_op_parallelism_threads=num_cpu,
+        intra_op_parallelism_threads=num_cpu
+    )
+    return tf.Session(config=tf_config)
+
+def get_experiment_environment():
+
+    setup_mpi_gpus()
+    tf_context = setup_tensorflow_session()
+    return tf_context
 
 def createTensorflowSession():
     """
     Create tensorflow session with specific argument
     to prevent it from taking all gpu memory
     """
-
+    setup_mpi_gpus()
+    tf_context = setup_tensorflow_session()
     # Let Tensorflow choose the device
     config = tf.ConfigProto(allow_soft_placement=True)
     # Prevent tensorflow from taking all the gpu memory
     config.gpu_options.allow_growth = True
     tf.Session(config=config).__enter__()
+    tf_sess = get_experiment_environment()
 
 def computeMeanReward(log_dir, last_n_episodes, is_es=False, return_n_episodes=False):
     """

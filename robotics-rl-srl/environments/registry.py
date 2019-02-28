@@ -1,5 +1,5 @@
 import subprocess
-
+import os
 import gym
 from gym.envs import registry
 
@@ -16,12 +16,22 @@ from environments.mobile_robot.mobile_robot_line_target_env import MobileRobotLi
 from environments.gym_baxter.baxter_env import BaxterEnv
 from environments.robobo_gym.robobo_env import RoboboEnv
 
+#def _merge(a, b):
+#    a.update(b)
+#    return a
 
-def register(_id, **kvargs):
-    if _id in registry.env_specs:
+#def register(_id, **kvargs):
+#    if _id in registry.env_specs:
+#        return
+#    else:
+#        return gym.envs.registration.register(_id, **kvargs)
+
+def register(id, **kwargs):
+    if id in registry.env_specs:
         return
     else:
-        return gym.envs.registration.register(_id, **kvargs)
+        return gym.envs.registration.register(id, **kwargs)
+
 
 
 def isXAvailable():
@@ -68,13 +78,14 @@ if isXAvailable():
     except:
         pass
 
-   
 
 
 for name, (env_class, _, _, _) in registered_env.items():
     register(
-        _id=name,
+        id=name,
         entry_point=env_class.__module__ + ":" + env_class.__name__,
         timestep_limit=None,  # This limit is changed in the file
-        reward_threshold=None  # Threshold at which the environment is considered as solved
+        reward_threshold=None,  # Threshold at which the environment is considered as solved
+        #kwargs=_merge({'action_repeat': 'random_target', 'multi-view': 'is_discrete'}, kwargs)
+        #kwargs=kwargs
     )

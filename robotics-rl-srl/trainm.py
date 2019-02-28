@@ -1,8 +1,7 @@
 """
 Train script for RL algorithms
 """
-import pdb
-import argparse
+
 import inspect
 import json
 import os
@@ -11,7 +10,7 @@ import time
 from functools import partial
 from datetime import datetime
 from pprint import pprint
-
+import argparse
 
 import yaml
 from stable_baselines.common import set_global_seeds
@@ -25,17 +24,71 @@ from mpi4py import MPI
 from tensorflow.python.client import device_lib
 from baselines import logger
 
-
+# Environment variables
 from environments.registry import registered_env
 from environments.srl_env import SRLGymEnv
+from environments.arguments import get_args
+from environments.utils import make_vec_envs, get_vec_normalize
+
+# Baselines
 from rl_baselines import AlgoType, ActionType
 from rl_baselines.registry import registered_rl
 from rl_baselines.utils import computeMeanReward
 from rl_baselines.utils import filterJSONSerializableObjects
 from rl_baselines.visualize import timestepsPlot, episodePlot
+
 from srl_zoo.utils import printGreen, printYellow
+
 from state_representation import SRLType
 from state_representation.registry import registered_srl
+
+
+#args = get_args()
+
+
+#num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
+
+#torch.manual_seed(args.seed)
+#torch.cuda.manual_seed_all(args.seed)
+
+#if args.cuda and torch.cuda.is_available() and args.cuda_deterministic:
+#    torch.backends.cudnn.benchmark = False
+#    torch.backends.cudnn.deterministic = True
+
+#try:
+#    os.makedirs(args.log_dir)
+#except OSError:
+#    files = glob.glob(os.path.join(args.log_dir, '*.monitor.csv'))
+#    for f in files:
+#        os.remove(f)
+#
+#eval_log_dir = args.log_dir + "_eval"
+#
+#try:
+#    os.makedirs(eval_log_dir)
+#except OSError:
+#    files = glob.glob(os.path.join(eval_log_dir, '*.monitor.csv'))
+#    for f in files:
+#        os.remove(f)
+
+
+#def main():
+#    torch.set_num_threads(1)
+#    device = torch.device("cuda:0" if args.cuda else "cpu")
+#
+#    if args.vis:
+#        from visdom import Visdom
+#        viz = Visdom(port=args.port)
+#        win = None
+#
+#    envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
+#                        args.gamma, args.log_dir, args.add_timestep, device, False)
+#
+#    actor_critic = Policy(envs.observation_space.shape, envs.action_space,
+#        base_kwargs={'recurrent': args.recurrent_policy})
+#    actor_critic.to(device)
+#
+#    obs = envs.reset()
 
 VISDOM_PORT = 8097
 LOG_INTERVAL = 0  # initialised during loading of the algorithm
@@ -89,9 +142,9 @@ def configureEnvAndLogFolder(args, env_kwargs, all_models):
     """
     global PLOT_TITLE, LOG_DIR
     # Reward sparse or shaped
-    env_kwargs["shape_reward"] = args.shape_reward
+    env_kwargs['shape_reward'] = args.shape_reward
     # Actions in joint space or relative position space
-    env_kwargs["action_joints"] = args.action_joints
+    env_kwargs['action_joints'] = args.action_joints
     args.log_dir += args.env + "/"
 
     models = all_models[args.env]
@@ -99,18 +152,18 @@ def configureEnvAndLogFolder(args, env_kwargs, all_models):
     path = models.get(args.srl_model)
     args.log_dir += args.srl_model + "/"
 
-    env_kwargs["srl_model"] = args.srl_model
+    env_kwargs['srl_model'] = args.srl_model
     if registered_srl[args.srl_model][0] == SRLType.SRL:
-        env_kwargs["use_srl"] = True
+        env_kwargs['use_srl'] = True
         if args.latest:
             printYellow("Using latest srl model in {}".format(models['log_folder']))
-            env_kwargs["srl_model_path"] = latestPath(models['log_folder'])
+            env_kwargs['srl_model_path'] = latestPath(models['log_folder'])
         else:
             assert path is not None, "Error: SRL path not defined for {} in {}".format(args.srl_model,
                                                                                        args.srl_config_file)
             # Path depending on whether to load the latest model or not
             srl_model_path = models['log_folder'] + path
-            env_kwargs["srl_model_path"] = srl_model_path
+            env_kwargs['srl_model_path'] = srl_model_path
 
     # Add date + current time
     args.log_dir += "{}/{}/".format(ALGO_NAME, datetime.now().strftime("%y-%m-%d_%Hh%M_%S"))
@@ -200,6 +253,7 @@ def setup_mpi_gpus():
     processes_outranked_on_this_node = [n for n in nodes_ordered_by_rank[:MPI.COMM_WORLD.Get_rank()] if n == node_id]
     local_rank = len(processes_outranked_on_this_node)
     os.environ['CUDA_VISIBLE_DEVICES'] = str(available_gpus[local_rank])
+#    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
 
 def guess_available_cpus():
     return int(multiprocessing.cpu_count())
@@ -221,9 +275,9 @@ def get_experiment_environment():
 tf_sess = get_experiment_environment()
 
 def main():
-    # Global variables for callback
-    global ENV_NAME, ALGO, ALGO_NAME, LOG_INTERVAL, VISDOM_PORT, viz
-    global SAVE_INTERVAL, EPISODE_WINDOW, MIN_EPISODES_BEFORE_SAVE
+#    torch.set_num_threads(1)
+    setup_mpi_gpus()
+    
     parser = argparse.ArgumentParser(description="Train script for RL algorithms")
     parser.add_argument('--algo', default='ppo2', choices=list(registered_rl.keys()), help='RL algo to use',
                         type=str)
@@ -256,10 +310,15 @@ def main():
                         help="Min number of episodes before saving best model")
     parser.add_argument('--latest', action='store_true', default=False,
                         help='load the latest learned model (location:srl_zoo/logs/DatasetName/)')
+    # Global variables for callback
+    global ENV_NAME, ALGO, ALGO_NAME, LOG_INTERVAL, VISDOM_PORT, viz
+    global SAVE_INTERVAL, EPISODE_WINDOW, MIN_EPISODES_BEFORE_SAVE
 
     # Ignore unknown args for now
-    args, unknown = parser.parse_known_args()
+#    args = get_args()
     env_kwargs = {}
+
+    args, unknown = parser.parse_known_args()
 
     # LOAD SRL models list
     assert os.path.exists(args.srl_config_file), \
@@ -309,20 +368,22 @@ def main():
         raise ValueError(args.algo + " does not support continuous actions, please remove the '--continuous-actions' " +
                          "(or '-c') flag.")
 
-    env_kwargs["is_discrete"] = not args.continuous_actions
+    env_kwargs['is_discrete'] = not args.continuous_actions
 
     printGreen("\nAgent = {} \n".format(args.algo))
 
+
     env_kwargs["action_repeat"] = args.action_repeat
+#    env_kwargs = {'action_repeat': args.action_repeat}
     # Random init position for button
-    env_kwargs["random_target"] = args.random_target
+    env_kwargs['random_target'] = args.random_target
     # Allow up action
     # env_kwargs["force_down"] = False
 
     # allow multi-view
     env_kwargs['multi_view'] = args.srl_model == "multi_view_srl"
-    parser = algo.customArguments(parser)
-    args = parser.parse_args()
+    #parser = algo.customArguments(parser)
+    #args = parser.parse_args()
 
     args, env_kwargs = configureEnvAndLogFolder(args, env_kwargs, all_models)
     args_dict = filterJSONSerializableObjects(vars(args))
@@ -368,12 +429,11 @@ def main():
     # Get the hyperparameter, if given (Hyperband)
     hyperparams = {param.split(":")[0]: param.split(":")[1] for param in args.hyperparam}
     hyperparams = algo.parserHyperParam(hyperparams)
-    with tf_sess:
+#    with tf_sess:
     # Train the agent
-        algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
+    algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
 
 
 if __name__ == '__main__':
     main()
 
-pdb.set_trace()

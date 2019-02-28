@@ -73,9 +73,9 @@ class BaxterEnv(SRLGymEnv):
     :param srl_pipe: (Queue, [Queue]) contains the input and output of the SRL model
     """
 
-    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1,
-                 learn_states=False, record_data=False,
-                 shape_reward=False, env_rank=0, srl_pipe=None, srl_model="raw_pixels"):
+    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1, multi_view=False, action_joints=False, random_target=False, force_down=True,
+                 learn_states=False, record_data=False, action_repeat=1,
+                 shape_reward=False, env_rank=0, srl_pipe=None, srl_model="raw_pixels",**_):
         super(BaxterEnv, self).__init__(srl_model=srl_model,
                                         relative_pos=RELATIVE_POS,
                                         env_rank=env_rank,
@@ -98,6 +98,12 @@ class BaxterEnv(SRLGymEnv):
         self.cuda = th.cuda.is_available()
         self.button_pos = None
         self.saver = None
+        self.action_repeat = action_repeat
+        self.action_joints = action_joints
+        self.multi_view = multi_view
+        self._random_target = random_target
+        self._force_down = force_down
+
 
         if self._is_discrete:
             self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
@@ -297,4 +303,11 @@ class BaxterEnv(SRLGymEnv):
             # Wait a bit, so that plot is visible
             plt.pause(0.0001)
         return self.observation
+
+    def getExtendedObservation(self):
+        if getNChannels() > 3:
+            self.multi_view = True
+        self._observation = self.render("rgb_array")
+        return self._observation
+
 
