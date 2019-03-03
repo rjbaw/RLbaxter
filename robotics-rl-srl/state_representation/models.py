@@ -12,6 +12,7 @@ from srl_zoo.utils import printGreen, printYellow
 
 NOISE_STD = 1e-6  # To avoid NaN for SRL
 
+th.cuda.is_available()
 
 def getSRLDim(path=None, env_object=None):
     """
@@ -171,6 +172,7 @@ class SRLNeuralNetwork(SRLBaseClass):
 
         self.device = th.device("cuda" if th.cuda.is_available() and cuda else "cpu")
         self.model = self.model.to(self.device)
+#        self.model = self.model.to(device)
 
     def load(self, path):
         self.model.load_state_dict(th.load(path))
@@ -187,6 +189,7 @@ class SRLNeuralNetwork(SRLBaseClass):
         # Channel first
         observation = np.transpose(observation, (0, 3, 2, 1))
         observation = th.from_numpy(observation).float().to(self.device)
+#        observation = th.from_numpy(observation).float().to(device)
 
         with th.no_grad():
             state = self.model.getStates(observation)[0]
@@ -215,3 +218,4 @@ class SRLPCA(SRLBaseClass):
         # Convert to a 1D array
         observation = observation.reshape(-1, n_features)
         return self.model.transform(observation)[0]
+

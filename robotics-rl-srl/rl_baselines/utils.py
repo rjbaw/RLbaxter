@@ -20,11 +20,12 @@ from mpi4py import MPI
 from tensorflow.python.client import device_lib
 from baselines import logger
 
+import torch.multiprocessing as multiprocessing
+
 
 # Multithreading fix
 
 def guess_available_gpus(n_gpus=None):
-
     local_device_protos = device_lib.list_local_devices()
     return [x.name for x in local_device_protos if x.device_type == 'GPU']
 
@@ -33,6 +34,11 @@ def setup_mpi_gpus():
     Set CUDA_VISIBLE_DEVICES using MPI.
     """
     available_gpus = guess_available_gpus()
+
+    mp = torch.multiprocessing.get_context('forkserver')
+#    pool = multiprocessing.Pool(multiprocessing.cpu_count(), maxtasksperchild=1
+    pool = mp.Pool(processes=1) # ,maxtasksperchild=1
+    rez = pool.map(worker, params_iterator) 
 
     node_id = platform.node()
     nodes_ordered_by_rank = MPI.COMM_WORLD.allgather(node_id)

@@ -89,3 +89,4 @@ for name, (env_class, _, _, _) in registered_env.items():
         #kwargs=_merge({'action_repeat': 'random_target', 'multi-view': 'is_discrete'}, kwargs)
         #kwargs=kwargs
     )
+

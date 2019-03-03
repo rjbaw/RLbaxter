@@ -125,6 +125,8 @@ def makeEnv(env_id, seed, rank, log_dir, allow_early_resets=False, env_kwargs=No
 
 #        local_env_kwargs = dict(env_kwargs)
         local_kwargs = env_kwargs
+#        kwargs = env_kwargs
+#        kwargs["env_rank"] = rank
         local_kwargs["env_rank"] = rank 
 #        env = _make(env_id, env_kwargs=local_env_kwargs)
         env = gym.make(env_id, **local_kwargs)

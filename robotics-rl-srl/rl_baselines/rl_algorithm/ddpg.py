@@ -13,6 +13,7 @@ from environments.utils import makeEnv
 from rl_baselines.base_classes import StableBaselinesRLObject
 from rl_baselines.utils import loadRunningAverage, MultiprocessSRLModel
 
+import torch.multiprocessing as mp
 
 class DDPGModel(StableBaselinesRLObject):
     """
@@ -97,6 +98,7 @@ class DDPGModel(StableBaselinesRLObject):
         }
 
     def train(self, args, callback, env_kwargs=None, train_kwargs=None):
+#    def train(self, args, callback, env_kwargs=None, train_kwargs=None, rank, device):
         env = self.makeEnv(args, env_kwargs=env_kwargs)
 
         if train_kwargs is None:

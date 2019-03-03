@@ -24,6 +24,12 @@ from mpi4py import MPI
 from tensorflow.python.client import device_lib
 from baselines import logger
 
+# pytorch multiprocessing
+import torch.multiprocessing as mp
+import torch
+#mp.set_start_method("spawn")
+#from model import MyModel
+
 # Environment variables
 from environments.registry import registered_env
 from environments.srl_env import SRLGymEnv
@@ -236,48 +242,48 @@ def callback(_locals, _globals):
     return True
 
 # Multithreading fix
-
-def guess_available_gpus(n_gpus=None):
-
-    local_device_protos = device_lib.list_local_devices()
-    return [x.name for x in local_device_protos if x.device_type == 'GPU']
-
-def setup_mpi_gpus():
-    """
-    Set CUDA_VISIBLE_DEVICES using MPI.
-    """
-    available_gpus = guess_available_gpus()
-
-    node_id = platform.node()
-    nodes_ordered_by_rank = MPI.COMM_WORLD.allgather(node_id)
-    processes_outranked_on_this_node = [n for n in nodes_ordered_by_rank[:MPI.COMM_WORLD.Get_rank()] if n == node_id]
-    local_rank = len(processes_outranked_on_this_node)
-    os.environ['CUDA_VISIBLE_DEVICES'] = str(available_gpus[local_rank])
+#
+#def guess_available_gpus(n_gpus=None):
+#
+#    local_device_protos = device_lib.list_local_devices()
+#    return [x.name for x in local_device_protos if x.device_type == 'GPU']
+#
+#def setup_mpi_gpus():
+#    """
+#    Set CUDA_VISIBLE_DEVICES using MPI.
+#    """
+#    available_gpus = guess_available_gpus()
+#
+#    node_id = platform.node()
+#    nodes_ordered_by_rank = MPI.COMM_WORLD.allgather(node_id)
+#    processes_outranked_on_this_node = [n for n in nodes_ordered_by_rank[:MPI.COMM_WORLD.Get_rank()] if n == node_id]
+#    local_rank = len(processes_outranked_on_this_node)
+#    os.environ['CUDA_VISIBLE_DEVICES'] = str(available_gpus[local_rank])
 #    os.environ['CUDA_VISIBLE_DEVICES'] = '0'
-
-def guess_available_cpus():
-    return int(multiprocessing.cpu_count())
-
-def setup_tensorflow_session():
-    num_cpu = guess_available_cpus()
-
-    tf_config = tf.ConfigProto(
-        inter_op_parallelism_threads=num_cpu,
-        intra_op_parallelism_threads=num_cpu
-    )
-    return tf.Session(config=tf_config)
-
-def get_experiment_environment():
-
-    setup_mpi_gpus()
-    tf_context = setup_tensorflow_session()
-    return tf_context
-tf_sess = get_experiment_environment()
+#
+#def guess_available_cpus():
+#    return int(multiprocessing.cpu_count())
+#
+#def setup_tensorflow_session():
+#    num_cpu = guess_available_cpus()
+#
+#    tf_config = tf.ConfigProto(
+#        inter_op_parallelism_threads=num_cpu,
+#        intra_op_parallelism_threads=num_cpu
+#    )
+#    return tf.Session(config=tf_config)
+#
+#def get_experiment_environment():
+#
+#    setup_mpi_gpus()
+#    tf_context = setup_tensorflow_session()
+#    return tf_context
+#tf_sess = get_experiment_environment()
 
 def main():
 #    torch.set_num_threads(1)
-    setup_mpi_gpus()
-    
+#    setup_mpi_gpus()
+
     parser = argparse.ArgumentParser(description="Train script for RL algorithms")
     parser.add_argument('--algo', default='ppo2', choices=list(registered_rl.keys()), help='RL algo to use',
                         type=str)
@@ -310,6 +316,9 @@ def main():
                         help="Min number of episodes before saving best model")
     parser.add_argument('--latest', action='store_true', default=False,
                         help='load the latest learned model (location:srl_zoo/logs/DatasetName/)')
+    parser.add_argument('--cuda', action='store_true', default=False, 
+                        help='enables CUDA training')
+    parser.add_argument('--num-processes', type=int, default=1, help='number of workers')
     # Global variables for callback
     global ENV_NAME, ALGO, ALGO_NAME, LOG_INTERVAL, VISDOM_PORT, viz
     global SAVE_INTERVAL, EPISODE_WINDOW, MIN_EPISODES_BEFORE_SAVE
@@ -382,8 +391,8 @@ def main():
 
     # allow multi-view
     env_kwargs['multi_view'] = args.srl_model == "multi_view_srl"
-    #parser = algo.customArguments(parser)
-    #args = parser.parse_args()
+    parser = algo.customArguments(parser)
+    args = parser.parse_args()
 
     args, env_kwargs = configureEnvAndLogFolder(args, env_kwargs, all_models)
     args_dict = filterJSONSerializableObjects(vars(args))
@@ -432,8 +441,45 @@ def main():
 #    with tf_sess:
     # Train the agent
     algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
+#    torch.multiprocessing.set_sharing_strategy('file_system')
+
+
+#    def to(self, device):
+#        self.obs = self.obs.to(device)
+#        self.recurrent_hidden_states = self.recurrent_hidden_states.to(device)
+#        self.rewards = self.rewards.to(device)
+#        self.value_preds = self.value_preds.to(device)
+#        self.returns = self.returns.to(device)
+#        self.action_log_probs = self.action_log_probs.to(device)
+#        self.actions = self.actions.to(device)
+#        self.masks = self.masks.to(device)
 
 
 if __name__ == '__main__':
-    main()
+#    main()
+    args=get_args()
 
+#    args = parser.parse_args()
+    use_cuda = args.cuda and torch.cuda.is_available()
+    device = torch.device("cuda" if use_cuda else "cpu")
+    dataloader_kwargs = {'pin_memory': True} if use_cuda else {}
+
+    torch.manual_seed(args.seed)
+#    torch.manual_seed(args.seed + rank)
+    mp.set_start_method('spawn')
+    model = main().to(device)
+    model.share_memory() # gradients are allocated lazily, so they are not shared here
+
+    processes = []
+    for rank in range(args.num-processes):
+#        p = mp.Process(target=algo.train, args=(rank, args, model, device, dataloader_kwargs))
+#        p = mp.Process(target=main, args=(rank, args, rank, device))
+        p = mp.Process(target=main, args=(rank, args, model, device, dataloader_kwargs))
+    # We first train the model across `num_processes` processes
+        p.start()
+        processes.append(p)
+    for p in processes:
+        p.join()
+
+    # Once training is complete, we can test the model
+#    test(args, model, device, dataloader_kwargs)

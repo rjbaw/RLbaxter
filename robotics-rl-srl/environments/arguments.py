@@ -44,6 +44,9 @@ def get_args():
                         help="Min number of episodes before saving best model")
     parser.add_argument('--latest', action='store_true', default=False,
                         help='load the latest learned model (location:srl_zoo/logs/DatasetName/)')
+    parser.add_argument('--cuda', action='store_true', default=False, 
+                        help='enables CUDA training')
+    parser.add_argument('--num-processes', type=int, default=1, help='number of workers')
     args = parser.parse_args()
 
     return args
