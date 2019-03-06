@@ -441,7 +441,6 @@ def main():
 #    with tf_sess:
     # Train the agent
     algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
-#    torch.multiprocessing.set_sharing_strategy('file_system')
 
 
 #    def to(self, device):
@@ -458,7 +457,9 @@ def main():
 if __name__ == '__main__':
 #    main()
     args=get_args()
-
+    mp.freeze_support()
+    torch.set_default_tensor_type(torch.cuda.FloatTensor)
+    torch.multiprocessing.set_sharing_strategy('file_system')
 #    args = parser.parse_args()
     use_cuda = args.cuda and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
@@ -466,9 +467,11 @@ if __name__ == '__main__':
 
     torch.manual_seed(args.seed)
 #    torch.manual_seed(args.seed + rank)
-    mp.set_start_method('spawn')
+    mp.set_start_method('spawn', force=True)
     model = main().to(device)
     model.share_memory() # gradients are allocated lazily, so they are not shared here
+
+#    mp.spawn(main(), args=(), nprocs=1, join=True, daemon=False)
 
     processes = []
     for rank in range(args.num-processes):

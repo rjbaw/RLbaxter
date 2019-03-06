@@ -14,13 +14,13 @@ from state_representation.models import loadSRLModel, getSRLDim
 
 # GPU processing
 
-import multiprocessing
+#import multiprocessing
 import platform
 from mpi4py import MPI
 from tensorflow.python.client import device_lib
 from baselines import logger
 
-import torch.multiprocessing as multiprocessing
+import torch.multiprocessing as mp
 
 
 # Multithreading fix
@@ -69,14 +69,14 @@ def createTensorflowSession():
     Create tensorflow session with specific argument
     to prevent it from taking all gpu memory
     """
-    setup_mpi_gpus()
-    tf_context = setup_tensorflow_session()
+#    setup_mpi_gpus()
+#    tf_context = setup_tensorflow_session()
     # Let Tensorflow choose the device
     config = tf.ConfigProto(allow_soft_placement=True)
     # Prevent tensorflow from taking all the gpu memory
     config.gpu_options.allow_growth = True
     tf.Session(config=config).__enter__()
-    tf_sess = get_experiment_environment()
+#    tf_sess = get_experiment_environment()
 
 def computeMeanReward(log_dir, last_n_episodes, is_es=False, return_n_episodes=False):
     """
@@ -219,6 +219,33 @@ class MultiprocessSRLModel:
     :param env_id: (str) the environment id string
     :param env_kwargs: (dict)
     """
+#import torch
+#import torch.multiprocessing as mp
+#
+#torch.set_default_tensor_type(torch.cuda.FloatTensor)
+#
+#def sender(q, e):
+#    for i in range(10):
+#        s_sample = [torch.zeros(1), torch.ones(1)]
+#        q.put(s_sample)
+#        e.wait()
+#        del s_sample
+#        e.clear()
+#
+#if __name__ == "__main__":
+#    ctx = mp.get_context("spawn")
+#    q = ctx.Queue()
+#    e = ctx.Event()
+#    p = ctx.Process(target=sender, args=(q, e))
+#    p.start()
+#
+#    for i in range(10):
+#        print('=== ITER {} ===".format(i))
+#        r_sample = q.get()
+#        del r_sample
+#        e.set()
+#
+#    p.join()
 
     def __init__(self, num_cpu, env_id, env_kwargs):
         # Create a duplex pipe between env and srl model, where all the inputs are unified and the origin
@@ -235,8 +262,7 @@ class MultiprocessSRLModel:
         # this is to control the number of CPUs that torch is allowed to use.
         # By default it will use all CPUs, even with GPU acceleration
         th.set_num_threads(1)
-        self.model = loadSRLModel(env_kwargs.get("srl_model_path", None), th.cuda.is_available(), self.state_dim,
-                                  env_object=None)
+        self.model = loadSRLModel(env_kwargs.get("srl_model_path", None), th.cuda.is_available(), self.state_dim, env_object=None)
         # run until the end of the caller thread
         while True:
             # pop an item, get state, and return to sender.

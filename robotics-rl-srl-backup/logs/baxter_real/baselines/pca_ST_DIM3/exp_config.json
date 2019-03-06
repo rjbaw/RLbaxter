@@ -1,1 +1,0 @@
-{"batch-size": 16, "data-folder": "baxter_real", "log-folder": "logs/baxter_real/baselines/pca_ST_DIM3", "state-dim": 3, "training-set-size": -1}

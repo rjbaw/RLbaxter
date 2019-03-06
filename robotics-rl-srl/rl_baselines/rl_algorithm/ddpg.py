@@ -13,7 +13,6 @@ from environments.utils import makeEnv
 from rl_baselines.base_classes import StableBaselinesRLObject
 from rl_baselines.utils import loadRunningAverage, MultiprocessSRLModel
 
-import torch.multiprocessing as mp
 
 class DDPGModel(StableBaselinesRLObject):
     """
@@ -65,7 +64,7 @@ class DDPGModel(StableBaselinesRLObject):
     def makeEnv(cls, args, env_kwargs=None, load_path_normalise=None):
         # Even though DeepQ is single core only, we need to use the pipe system to work
         if env_kwargs is not None and env_kwargs.get("use_srl", False):
-            srl_model = MultiprocessSRLModel(1, args.env, env_kwargs)
+            srl_model = MultiprocessSRLModel(8, args.env, env_kwargs)
             env_kwargs["state_dim"] = srl_model.state_dim
             env_kwargs["srl_pipe"] = srl_model.pipe
 

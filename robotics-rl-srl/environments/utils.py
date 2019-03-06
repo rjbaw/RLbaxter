@@ -14,9 +14,6 @@ from stable_baselines.common.vec_env.vec_normalize import VecNormalize as VecNor
 
 import torch
 import torch.nn as nn
-
-import torch
-import torch.nn as nn
 import torch.nn.functional as F
 import numpy as np
 

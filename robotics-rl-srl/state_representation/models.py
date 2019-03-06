@@ -12,7 +12,7 @@ from srl_zoo.utils import printGreen, printYellow
 
 NOISE_STD = 1e-6  # To avoid NaN for SRL
 
-th.cuda.is_available()
+#th.cuda.is_available()
 
 def getSRLDim(path=None, env_object=None):
     """
@@ -170,6 +170,7 @@ class SRLNeuralNetwork(SRLBaseClass):
                                     cuda=self.cuda, losses=losses, inverse_model_type=inverse_model_type)
         self.model.eval()
 
+#        device = th.device("cuda" if th.cuda.is_available() and cuda else "cpu")
         self.device = th.device("cuda" if th.cuda.is_available() and cuda else "cpu")
         self.model = self.model.to(self.device)
 #        self.model = self.model.to(device)

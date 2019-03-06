@@ -1,8 +1,0 @@
-/usr/local/lib/cmake/lapack-3.8.0/lapack-targets.cmake
-/usr/local/lib/cmake/lapack-3.8.0/lapack-targets-release.cmake
-/usr/local/lib/pkgconfig/lapack.pc
-/usr/local/lib/cmake/lapack-3.8.0/lapack-config.cmake
-/usr/local/lib/cmake/lapack-3.8.0/lapack-config-version.cmake
-/usr/local/lib/pkgconfig/blas.pc
-/usr/local/lib/libblas.a
-/usr/local/lib/liblapack.a

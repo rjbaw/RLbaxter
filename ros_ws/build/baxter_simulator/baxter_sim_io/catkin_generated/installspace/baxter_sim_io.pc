@@ -1,8 +1,0 @@
-prefix=/home/nvidia/ros_ws/install
-
-Name: baxter_sim_io
-Description: Description of baxter_sim_io
-Version: 1.2.12
-Cflags: -I/home/nvidia/ros_ws/install/include
-Libs: -L/home/nvidia/ros_ws/install/lib -lbaxter_sim_io
-Requires: baxter_core_msgs

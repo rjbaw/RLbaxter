@@ -1,3 +1,0 @@
-# Ignore logs and srl submodule when building docker image
-logs/
-srl_zoo/
