@@ -1,12 +1,14 @@
 import os
 import json
-import time
+
+import sys
 
 import cv2
 import numpy as np
 
 from srl_zoo.utils import printYellow
-from rl_baselines.utils import filterJSONSerializableObjects
+#avoid cycle man
+#from rl_baselines.utils import filterJSONSerializableObjects
 from state_representation.client import SRLClient
 
 
@@ -26,6 +28,7 @@ class EpisodeSaver(object):
 
     def __init__(self, name, max_dist, state_dim=-1, globals_=None, learn_every=3, learn_states=False,
                  path='srl_zoo/data/', relative_pos=False):
+        from rl_baselines.utils import filterJSONSerializableObjects
         super(EpisodeSaver, self).__init__()
         self.name = name
         self.data_folder = path + name

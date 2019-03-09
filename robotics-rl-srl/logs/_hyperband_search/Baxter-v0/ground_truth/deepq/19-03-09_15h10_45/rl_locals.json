@@ -1,0 +1,1 @@
+{"_": 0, "episode_rewards": [0.0], "log_interval": 100, "new_tb_log": true, "prioritized_replay_beta_iters": 33000, "reset": true, "reset_num_timesteps": true, "seed": 0, "tb_log_name": "DQN", "total_timesteps": 33000, "writer": null}
