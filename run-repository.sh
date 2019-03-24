@@ -52,6 +52,7 @@ docker run -it \
   -v "/home/$USER/:/home/$USER/" \
   -v "/mnt/sdb:/mnt/sdb" \
   -v "/mnt/sdb:/mnt/sda" \
+  -v /usr/local/cuda-10.0/lib64:/usr/local/cuda-10.0/lib64 \
   --network="host"\
   --device=/dev/sda\
   --cap-add=NET_ADMIN\
@@ -64,6 +65,6 @@ xhost -local:root
 
 #  -v /usr/local/cuda/lib64:/usr/local/cuda/lib64 \
 #  --add-host=docker:10.154.148.1\
-
+#  -v /usr/local/lib/openmpi:/usr/local/lib/openmpi\
 #  --device=/dev/sdb1\
 

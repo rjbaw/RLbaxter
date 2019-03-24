@@ -17,12 +17,12 @@ from stable_baselines.common import set_global_seeds
 from visdom import Visdom
 
 # GPU processing
-import multiprocessing
-import platform
-import tensorflow as tf
-from mpi4py import MPI
-from tensorflow.python.client import device_lib
-from baselines import logger
+#	import multiprocessing
+#import platform
+#import tensorflow as tf
+#from mpi4py import MPI
+#from tensorflow.python.client import device_lib
+#from baselines import logger
 
 # pytorch multiprocessing
 import torch.multiprocessing as mp
@@ -50,7 +50,7 @@ from state_representation.registry import registered_srl
 
 
 #args = get_args()
-
+#--srl-model srl_splits --num-stack 8 --shape-reward --algo ppo2 --env Baxter-v0 --log-dir logs_real/Baxter-v0/srl_splits/ppo2/19-03-08_15h58_01/
 
 #num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
 
@@ -109,7 +109,7 @@ n_steps = 0
 SAVE_INTERVAL = 0  # initialised during loading of the algorithm
 N_EPISODES_EVAL = 100  # Evaluate the performance on the last 100 episodes
 MIN_EPISODES_BEFORE_SAVE = 100  # Number of episodes to train on before saving best model
-params_saved = False
+params_saved = True
 best_mean_reward = -10000
 
 win, win_smooth, win_episodes = None, None, None
@@ -151,12 +151,12 @@ def configureEnvAndLogFolder(args, env_kwargs, all_models):
     env_kwargs['shape_reward'] = args.shape_reward
     # Actions in joint space or relative position space
     env_kwargs['action_joints'] = args.action_joints
-    args.log_dir += args.env + "/"
+#    args.log_dir += args.env + "/"
 
     models = all_models[args.env]
     PLOT_TITLE = args.srl_model
     path = models.get(args.srl_model)
-    args.log_dir += args.srl_model + "/"
+#    args.log_dir += args.srl_model + "/"
 
     env_kwargs['srl_model'] = args.srl_model
     if registered_srl[args.srl_model][0] == SRLType.SRL:
@@ -172,7 +172,11 @@ def configureEnvAndLogFolder(args, env_kwargs, all_models):
             env_kwargs['srl_model_path'] = srl_model_path
 
     # Add date + current time
-    args.log_dir += "{}/{}/".format(ALGO_NAME, datetime.now().strftime("%y-%m-%d_%Hh%M_%S"))
+    if not params_saved:
+        args.log_dir += args.env + "/"
+        args.log_dir += args.srl_model + "/"
+        args.log_dir += "{}/{}/".format(ALGO_NAME, datetime.now().strftime("%y-%m-%d_%Hh%M_%S"))
+
     LOG_DIR = args.log_dir
     # wait one second if the folder exist to avoid overwritting logs
     time.sleep(1)
