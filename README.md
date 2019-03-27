@@ -1,18 +1,38 @@
 
-Under development
+***Under development***
 
 
 Roadmap:
 
 - Optimization for Nvidia Jetson Xavier
 
-- Compare and contrast with other techniques
+- Upgrading to Jetpack 4.2
 
-- Adding new features
+- Fixing TPRO algorithm problems
+
+- Guide and anything that can be shared
+
+- Cleaning up
+
+- Fixing continous actions on Baxter
 
 
+Medium Term plans that maybe abandoned due to Time constraints:
 
 
+- Compare and contrast with other techniques (Deep Object pose)
+
+- Working on Pybullet Baxter integration
+
+- Adding multiview functionality
+
+
+Future plans:
+
+Using TensorRT to take advantage of Jetson Xavier
+
+
+#################################################
 
 Rethink Robotics Baxter on Nvidia Jetson Xavier
 
@@ -57,6 +77,9 @@ How to use:
 This is still a work in progress, so if you have any issues feel free to contact me directly.
 
 
+
+***Outdated Section***
+
 Special thanks to 
 
 https://github.com/araffin/robotics-rl-srl
@@ -66,6 +89,8 @@ https://github.com/jetsonhacks/buildOpenCVXavier
 https://github.com/Technica-Corporation/Tegra-Docker#device-parameters
 
 https://github.com/hill-a/stable-baselines
+
+Nvidia Forum members
 
 Resources
 

@@ -1,6 +1,5 @@
 from stable_baselines import TRPO
 from stable_baselines.common.vec_env import VecNormalize, DummyVecEnv, VecFrameStack
-
 from rl_baselines.base_classes import StableBaselinesRLObject
 from rl_baselines.utils import MultiprocessSRLModel, loadRunningAverage
 from environments.utils import makeEnv

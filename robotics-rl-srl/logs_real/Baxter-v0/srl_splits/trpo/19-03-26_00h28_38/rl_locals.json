@@ -1,0 +1,1 @@
+{"episodes_so_far": 0, "iters_so_far": 0, "log_interval": 100, "new_tb_log": true, "reset_num_timesteps": true, "seed": 0, "t_start": 1553560140.7161999, "tb_log_name": "TRPO", "timesteps_so_far": 0, "total_timesteps": 1100000, "true_rewbuffer": null, "writer": null}

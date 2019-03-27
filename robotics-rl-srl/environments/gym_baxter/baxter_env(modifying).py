@@ -17,6 +17,9 @@ from real_robots.utils import recvMatrix
 from state_representation.episode_saver import EpisodeSaver
 #from episode_saver import EpisodeSaver
 
+from environments.gym_baxter import baxter
+
+
 #RENDER_HEIGHT = 224
 #RENDER_WIDTH = 224
 RENDER_HEIGHT = 540
@@ -74,7 +77,7 @@ class BaxterEnv(SRLGymEnv):
     :param srl_pipe: (Queue, [Queue]) contains the input and output of the SRL model
     """
 
-    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1, multi_view=False, action_joints=False, random_target=False, action_repeat=1,
+    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1, multi_view=False, action_joints=False, random_target=False, action_repeat=1, record_data=False, 
                  learn_states=False, record_data=False, force_down=True,
                  shape_reward=False, env_rank=0, srl_pipe=None, srl_model="raw_pixels",**_):
         super(BaxterEnv, self).__init__(srl_model=srl_model,
@@ -105,15 +108,41 @@ class BaxterEnv(SRLGymEnv):
         self._random_target = random_target
         self._force_down = force_down
 
+        
+        if self._renders:
+            client_id = p.connect(p.SHARED_MEMORY)
+            if client_id < 0:
+                p.connect(p.GUI)
+            p.resetDebugVisualizerCamera(1.3, 180, -41, [0.52, -0.2, -0.33])
+
+            self.debug = True
+            # Debug sliders for moving the camera
+            self.x_slider = p.addUserDebugParameter("x_slider", -10, 10, self.camera_target_pos[0])
+            self.y_slider = p.addUserDebugParameter("y_slider", -10, 10, self.camera_target_pos[1])
+            self.z_slider = p.addUserDebugParameter("z_slider", -10, 10, self.camera_target_pos[2])
+            self.dist_slider = p.addUserDebugParameter("cam_dist", 0, 10, self._cam_dist)
+            self.yaw_slider = p.addUserDebugParameter("cam_yaw", -180, 180, self._cam_yaw)
+            self.pitch_slider = p.addUserDebugParameter("cam_pitch", -180, 180, self._cam_pitch)
+
+        else:
+            p.connect(p.DIRECT)
+
+        global CONNECTED_TO_SIMULATOR
+        CONNECTED_TO_SIMULATOR = True
+
 
         if self._is_discrete:
             self.action_space = spaces.Discrete(N_DISCRETE_ACTIONS)
         else:
             action_dim = 3
             self._action_bound = 1
-            action_bounds = np.array([self._action_bound] * action_dim)
+            action_bounds = np.array([self._action_bound] * action_dim, dtype=np.float32)
+#            action_bounds = np.array(action_dim * [self._action_bound], dtype=np.float32)
             self.action_space = spaces.Box(-action_bounds, action_bounds, dtype=np.float32)
+#            self.action_space = spaces.Box(-action_bounds, action_bounds, dtype=np.float64)
         # SRL model
+
+
         if self.srl_model != "raw_pixels":
             if self.srl_model == "ground_truth":
                 self.state_dim = self.getGroundTruthDim()
@@ -123,6 +152,13 @@ class BaxterEnv(SRLGymEnv):
             self.dtype = np.uint8
             self.observation_space = spaces.Box(low=0, high=255, shape=(RENDER_WIDTH, RENDER_HEIGHT, 3),
                                                 dtype=self.dtype)
+
+
+        elif self.srl_model == "joints":
+            self.state_dim = self.getJointsDim()
+        elif self.srl_model == "joints_position":
+            self.state_dim = self.getGroundTruthDim() + self.getJointsDim()
+
 
         if record_data:
             print("Recording data...")
@@ -153,14 +189,49 @@ class BaxterEnv(SRLGymEnv):
         :action: (int)
         :return: (tensor (np.ndarray)) observation, int reward, bool done, dict extras)
         """
-        assert self.action_space.contains(action)
+#        assert self.action_space.contains(action)
+
+        if action is None:
+            if self.action_joints:
+                return self.step2(list(np.array(self._kuka.joint_positions)[:7]) + [0, 0])
+            else:
+                return self.step2([0, 0, 0, 0, 0])
+
+
         # Convert int action to action in (x,y,z) space
-        self.action = action_dict[action]
+        if self._is_discrete:
+            self.action = action_dict[action]
+        else :
+#            action = len(action)
+#            action = action.astype(np.uint8)
+#            self.action = action_dict[action]
+            if self.action_joints:
+                arm_joints = np.array(self._kuka.joint_positions)[:7]
+                d_theta = DELTA_THETA
+                # Add noise to action
+                d_theta += self.np_random.normal(0.0, scale=NOISE_STD_JOINTS)
+                # append [0,0] for finger angles
+                real_action = list(action * d_theta + arm_joints) + [0, 0]  # TODO remove up action
+            else:
+                dv = DELTA_V_CONTINUOUS
+                # Add noise to action
+                dv += self.np_random.normal(0.0, scale=NOISE_STD_CONTINUOUS)
+                dx = action[0] * dv
+                dy = action[1] * dv
+                if self._force_down:
+                    dz = -abs(action[2] * dv)  # Remove up action
+                else:
+                    dz = action[2] * dv
+                finger_angle = 0.0  # Close the gripper
+                real_action = [dx, dy, dz, 0, finger_angle]
+
+        for i in range(self.action_repeat):
+            self.socket.send_json({"command": "action", "action": self.action})
 
         self._env_step_counter += 1
 
         # Send the action to the server
-        self.socket.send_json({"command": "action", "action": self.action})
+#        self.socket.send_json({"command": "action", "action": self.action})
 
         # Receive state data (position, etc), important to update state related values
         self.getEnvState()
@@ -170,7 +241,7 @@ class BaxterEnv(SRLGymEnv):
         done = self._hasEpisodeTerminated()
         if self.saver is not None:
             self.saver.step(self.observation, action, self.reward, done, self.getGroundTruth())
-
+#            self.saver.step(self._observation, action, self.reward, done, self.getGroundTruth())
         if self.use_srl:
             return self.getSRLState(self.observation), self.reward, done, {}
         else:

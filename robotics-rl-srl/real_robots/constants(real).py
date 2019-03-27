@@ -28,12 +28,12 @@ if USING_REAL_BAXTER:
     # Distance below which the target is considered to be reached
     DIST_TO_TARGET_THRESHOLD = 0.035
     # Max distance between end effector and the button (for negative reward)
-    MAX_DISTANCE = 0.18
+    MAX_DISTANCE = 0.16
     # Used by the inverse kinematics
     IK_SEED_POSITIONS = None
     # Constant distance delta for actions
     DELTA_POS = 0.02
-    Z_TABLE = - 0.10
+    Z_TABLE = - 0.18
     # Max number of steps per episode
     MAX_STEPS = 100
     # ROS Topics
@@ -87,6 +87,7 @@ else:
     IMAGE_TOPIC = "/cameras/head_camera_2/image"
     MAX_STEPS = 100
     MAX_DISTANCE = 0.35
+    SECOND_CAM_TOPIC = "/cameras/left_hand_camera/image"
 
 # Arrow keys for teleoperation
 UP_KEY = 82  # the arrow key "up"

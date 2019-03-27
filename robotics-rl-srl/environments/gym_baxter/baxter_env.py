@@ -111,10 +111,8 @@ class BaxterEnv(SRLGymEnv):
         else:
             action_dim = 3
             self._action_bound = 1
-            action_bounds = np.array([self._action_bound] * action_dim, dtype=np.float32)
-#            action_bounds = np.array(action_dim * [self._action_bound], dtype=np.float32)
-#            self.action_space = spaces.Box(-action_bounds, action_bounds, dtype=np.float32)
-            self.action_space = spaces.Box(-action_bounds, action_bounds, dtype=np.float64)
+            action_bounds = np.array([self._action_bound] * action_dim)
+            self.action_space = spaces.Box(-action_bounds, action_bounds, dtype=np.float32)
         # SRL model
         if self.srl_model != "raw_pixels":
             if self.srl_model == "ground_truth":
@@ -157,20 +155,12 @@ class BaxterEnv(SRLGymEnv):
         """
         assert self.action_space.contains(action)
         # Convert int action to action in (x,y,z) space
-        if self._is_discrete:
-            self.action = action_dict[action]
-        else :
-            action = len(action)
-#            action = action.astype(np.uint8)
-            self.action = action_dict[action]
-
-        for i in range(self.action_repeat):
-            self.socket.send_json({"command": "action", "action": self.action})
+        self.action = action_dict[action]
 
         self._env_step_counter += 1
 
         # Send the action to the server
-#        self.socket.send_json({"command": "action", "action": self.action})
+        self.socket.send_json({"command": "action", "action": self.action})
 
         # Receive state data (position, etc), important to update state related values
         self.getEnvState()
@@ -180,7 +170,7 @@ class BaxterEnv(SRLGymEnv):
         done = self._hasEpisodeTerminated()
         if self.saver is not None:
             self.saver.step(self.observation, action, self.reward, done, self.getGroundTruth())
-#            self.saver.step(self._observation, action, self.reward, done, self.getGroundTruth())
+
         if self.use_srl:
             return self.getSRLState(self.observation), self.reward, done, {}
         else:
