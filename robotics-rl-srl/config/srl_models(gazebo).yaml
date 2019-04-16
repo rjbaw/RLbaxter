@@ -1,0 +1,21 @@
+Baxter-v0:
+  # Base path to SRL log folder
+  log_folder: srl_zoo/logs/baxter_real_2/
+  # Path to the different trained SRL models
+  autoencoder: 19-03-25_22h35_26_custom_cnn_ST_DIM2_autoencoder/srl_model.pth
+  vae: 19-03-25_23h39_02_custom_cnn_ST_DIM2_vae/srl_model.pth
+# supervised: baselines/supervised_resnet_SEED1_EPOCHS50_BS32/srl_supervised_model.pth
+# pca: baselines/pca_ST_DIM5/pca.pkl
+  inverse: 19-03-25_22h51_46_custom_cnn_ST_DIM2_inverse/srl_model.pth
+  forward: 19-03-26_01h33_01_custom_cnn_ST_DIM2_forward/srl_model.pth
+# multi_view_srl: 19-01-31_14h46_08_custom_cnn_ST_DIM2_triplet/srl_model.pth
+  srl_combination: 19-03-26_02h12_23_custom_cnn_ST_DIM2_autoencoder_inverse/srl_model.pth
+  srl_splits: 19-03-26_02h32_49_custom_cnn_ST_DIM22_autoencoder_inverse/srl_model.pth
+  reward: 19-03-26_00h15_10_custom_cnn_ST_DIM2_reward/srl_model.pth
+  dae: 19-03-25_23h13_08_custom_cnn_ST_DIM2_dae/srl_model.pth
+  robotic_priors: 19-03-26_01h05_41_custom_cnn_ST_DIM2_priors/srl_model.pth
+
+
+# reward-prior 19-03-26_00h31_15_custom_cnn_ST_DIM2_reward-prior
+# episode-prior 19-03-26_00h45_49_custom_cnn_ST_DIM2_episode-prior
+

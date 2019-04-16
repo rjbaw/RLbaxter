@@ -1,36 +1,32 @@
 
 ***Under development***
 
+Collection of Results:
+
+https://drive.google.com/drive/folders/1YfochtM8Ie_TiUsEzNOlyCkymv0zvq4Z?usp=sharing
+
+Detailed Guide:
+
+Coming Soon
+
 
 Roadmap:
 
-- Optimization for Nvidia Jetson Xavier
+1. Upgrading to Jetpack 4.2
 
-- Upgrading to Jetpack 4.2
+2. Fixing TPRO algorithm problems
+   CMA-ES and ars parser problem
 
-- Fixing TPRO algorithm problems
+3. Adding multiview functionality to Baxter
 
-- Guide and anything that can be shared
-
-- Cleaning up
-
-- Fixing continous actions on Baxter
+4. Fixing continous actions on Baxter
+   Working on Pybullet Baxter integration
 
 
-Medium Term plans that maybe abandoned due to Time constraints:
+Abandoned :
 
-
+- Using TensorRT to take advantage of Jetson Xavier
 - Compare and contrast with other techniques (Deep Object pose)
-
-- Working on Pybullet Baxter integration
-
-- Adding multiview functionality
-
-
-Future plans:
-
-Using TensorRT to take advantage of Jetson Xavier
-
 
 #################################################
 

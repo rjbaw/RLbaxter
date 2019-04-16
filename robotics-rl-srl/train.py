@@ -16,19 +16,18 @@ import yaml
 from stable_baselines.common import set_global_seeds
 from visdom import Visdom
 
+# For anyone using tensorflow and mpi4py
 # GPU processing
-import multiprocessing
-import platform
-import tensorflow as tf
-from mpi4py import MPI
-from tensorflow.python.client import device_lib
-from baselines import logger
+#import multiprocessing
+#import platform
+#import tensorflow as tf
+#from mpi4py import MPI
+#from tensorflow.python.client import device_lib
+#from baselines import logger
 
 # pytorch multiprocessing
 import torch.multiprocessing as mp
 import torch
-#mp.set_start_method("spawn")
-#from model import MyModel
 
 # Environment variables
 from environments.registry import registered_env
@@ -49,53 +48,7 @@ from state_representation import SRLType
 from state_representation.registry import registered_srl
 
 
-#args = get_args()
-#--srl-model srl_splits --num-stack 8 --shape-reward --algo ppo2 --env Baxter-v0 --log-dir logs_real/Baxter-v0/srl_splits/ppo2/19-03-08_15h58_01/
-
-#num_updates = int(args.num_env_steps) // args.num_steps // args.num_processes
-
-#torch.manual_seed(args.seed)
-#torch.cuda.manual_seed_all(args.seed)
-
-#if args.cuda and torch.cuda.is_available() and args.cuda_deterministic:
-#    torch.backends.cudnn.benchmark = False
-#    torch.backends.cudnn.deterministic = True
-
-#try:
-#    os.makedirs(args.log_dir)
-#except OSError:
-#    files = glob.glob(os.path.join(args.log_dir, '*.monitor.csv'))
-#    for f in files:
-#        os.remove(f)
-#
-#eval_log_dir = args.log_dir + "_eval"
-#
-#try:
-#    os.makedirs(eval_log_dir)
-#except OSError:
-#    files = glob.glob(os.path.join(eval_log_dir, '*.monitor.csv'))
-#    for f in files:
-#        os.remove(f)
-
-
-#def main():
-#    torch.set_num_threads(1)
-#    device = torch.device("cuda:0" if args.cuda else "cpu")
-#
-#    if args.vis:
-#        from visdom import Visdom
-#        viz = Visdom(port=args.port)
-#        win = None
-#
-#    envs = make_vec_envs(args.env_name, args.seed, args.num_processes,
-#                        args.gamma, args.log_dir, args.add_timestep, device, False)
-#
-#    actor_critic = Policy(envs.observation_space.shape, envs.action_space,
-#        base_kwargs={'recurrent': args.recurrent_policy})
-#    actor_critic.to(device)
-#
-#    obs = envs.reset()
-
+# Setup Constants
 VISDOM_PORT = 8097
 LOG_INTERVAL = 0  # initialised during loading of the algorithm
 LOG_DIR = ""
@@ -116,9 +69,8 @@ win, win_smooth, win_episodes = None, None, None
 
 #os.environ['TF_CPP_MIN_LOG_LEVEL'] = '3'  # used to remove debug info of tensorflow
 
-
+# Occasionally random errors here, finding a solution
 #def saveEnvParams(kuka_env_globals, env_kwargs):
-
 def saveEnvParams(global_env_param, env_kwargs):
     """
     :param kuka_env_globals: (dict)
@@ -149,7 +101,9 @@ def configureEnvAndLogFolder(args, env_kwargs, all_models):
     global PLOT_TITLE, LOG_DIR
     # Reward sparse or shaped
     env_kwargs['shape_reward'] = args.shape_reward
+
     # Actions in joint space or relative position space
+    # Only relevant for some robots
     env_kwargs['action_joints'] = args.action_joints
     args.log_dir += args.env + "/"
 
@@ -241,7 +195,7 @@ def callback(_locals, _globals):
     n_steps += 1
     return True
 
-# Multithreading fix
+# Multithreading fix, of tensorflow and MPI4py, does not work in our case
 #
 #def guess_available_gpus(n_gpus=None):
 #
@@ -281,8 +235,6 @@ def callback(_locals, _globals):
 #tf_sess = get_experiment_environment()
 
 def main():
-#    torch.set_num_threads(1)
-#    setup_mpi_gpus()
 
     parser = argparse.ArgumentParser(description="Train script for RL algorithms")
     parser.add_argument('--algo', default='ppo2', choices=list(registered_rl.keys()), help='RL algo to use',
@@ -319,12 +271,13 @@ def main():
     parser.add_argument('--cuda', action='store_true', default=False, 
                         help='enables CUDA training')
     parser.add_argument('--num-processes', type=int, default=1, help='number of workers')
+
     # Global variables for callback
     global ENV_NAME, ALGO, ALGO_NAME, LOG_INTERVAL, VISDOM_PORT, viz
     global SAVE_INTERVAL, EPISODE_WINDOW, MIN_EPISODES_BEFORE_SAVE
 
     # Ignore unknown args for now
-#    args = get_args()
+#    args = get_args() ; needs separation of unknown and known argparse
     env_kwargs = {}
 
     args, unknown = parser.parse_known_args()
@@ -383,7 +336,7 @@ def main():
 
 
     env_kwargs["action_repeat"] = args.action_repeat
-#    env_kwargs = {'action_repeat': args.action_repeat}
+#    env_kwargs = {'action_repeat': args.action_repeat} ; has the same effect
     # Random init position for button
     env_kwargs['random_target'] = args.random_target
     # Allow up action
@@ -391,7 +344,9 @@ def main():
 
     # allow multi-view
     env_kwargs['multi_view'] = args.srl_model == "multi_view_srl"
+
     parser = algo.customArguments(parser)
+
     args = parser.parse_args()
 
     args, env_kwargs = configureEnvAndLogFolder(args, env_kwargs, all_models)
@@ -429,20 +384,24 @@ def main():
     pprint(args_dict)
     printYellow("Env Globals:")
     pprint(filterJSONSerializableObjects({**globals_env_param, **default_env_kwargs, **env_kwargs}))
+
     # Save env params
     saveEnvParams(globals_env_param, {**default_env_kwargs, **env_kwargs})
+
     # Seed tensorflow, python and numpy random generator
     set_global_seeds(args.seed)
-    # Augment the number of timesteps (when using mutliprocessing this number is not reached)
+
+    # Augment the number of timesteps (when using multiprocessing this number is not reached) (limit time steps)
     args.num_timesteps = int(1.1 * args.num_timesteps)
+
     # Get the hyperparameter, if given (Hyperband)
     hyperparams = {param.split(":")[0]: param.split(":")[1] for param in args.hyperparam}
     hyperparams = algo.parserHyperParam(hyperparams)
-#    with tf_sess:
+
     # Train the agent
     algo.train(args, callback, env_kwargs=env_kwargs, train_kwargs=hyperparams)
 
-
+# Example of multiple device implementation
 #    def to(self, device):
 #        self.obs = self.obs.to(device)
 #        self.recurrent_hidden_states = self.recurrent_hidden_states.to(device)
@@ -454,35 +413,38 @@ def main():
 #        self.masks = self.masks.to(device)
 
 
+# Prevent subprocess importing the main function
 if __name__ == '__main__':
-#    main()
+
+# Parse Arguments gets called from another file as a work around
     args=get_args()
+# Does not need this but it is called as a safe guard 
     mp.freeze_support()
     torch.set_default_tensor_type(torch.cuda.FloatTensor)
+
+# Can still be run with out file system sharing but it prevents the user from using too much file descriptors and crashing the OS 
     torch.multiprocessing.set_sharing_strategy('file_system')
-#    args = parser.parse_args()
+
     use_cuda = args.cuda and torch.cuda.is_available()
     device = torch.device("cuda" if use_cuda else "cpu")
+
+# Experimental, still does not work but loading with pin memory will speed up training
     dataloader_kwargs = {'pin_memory': True} if use_cuda else {}
 
     torch.manual_seed(args.seed)
-#    torch.manual_seed(args.seed + rank)
+
+# Forking does not work for CUDA devices, for alternatives use forkserver instead
     mp.set_start_method('spawn', force=True)
     model = main().to(device)
     model.share_memory() # gradients are allocated lazily, so they are not shared here
 
-#    mp.spawn(main(), args=(), nprocs=1, join=True, daemon=False)
-
+# Simple Hogwild implementation
     processes = []
     for rank in range(args.num-processes):
-#        p = mp.Process(target=algo.train, args=(rank, args, model, device, dataloader_kwargs))
-#        p = mp.Process(target=main, args=(rank, args, rank, device))
+
         p = mp.Process(target=main, args=(rank, args, model, device, dataloader_kwargs))
     # We first train the model across `num_processes` processes
         p.start()
         processes.append(p)
     for p in processes:
         p.join()
-
-    # Once training is complete, we can test the model
-#    test(args, model, device, dataloader_kwargs)

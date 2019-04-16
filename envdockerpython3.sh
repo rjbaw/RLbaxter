@@ -25,8 +25,8 @@ cd ~/RLbaxter/BuildOpenCVXavier
 #git checkout v1.0
 ./buildOpenCV.sh
 ./removeOpenCVSources.sh
-cd ~/.virtualenvs/python3/lib/python3.5/site-packages
-ln -sf /usr/local/lib/python3.5/cv2.so cv2.so
+#cd ~/.virtualenvs/python3/lib/python3.5/site-packages
+#ln -sf /usr/local/lib/python3.5/cv2.so cv2.so
 #cd ~/
 #sudo rm -r buildOpenCVXavier
 
@@ -47,25 +47,26 @@ sudo rm -r pytorch
 pip3 install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp/v411 tensorflow-gpu --user
 #pip install --extra-index-url https://developer.download.nvidia.com/compute/redist/jp33 tensorflow-gpu
 sudo apt-get install  -y openjdk-8-jdk
-sudo pip3 install six mock h5py enum34
-# building bazel
-cd /mnt/sdb
-wget https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-dist.zip
-unzip bazel-0.15.2-dist.zip -d bazel-0.15.2-dist
-cd bazel-0.15.2-dist
-./compile.sh
-sudo cp output/bazel /usr/local/bin
-bazel help
-cd /mnt/sdb
-sudo rm -r bazel-0.15.2-dist
+pip3 install six mock h5py enum34
+
+# building bazel only for older versions of tensorflow
+#cd /mnt/sdb
+#wget https://github.com/bazelbuild/bazel/releases/download/0.15.2/bazel-0.15.2-dist.zip
+#unzip bazel-0.15.2-dist.zip -d bazel-0.15.2-dist
+#cd bazel-0.15.2-dist
+#./compile.sh
+#sudo cp output/bazel /usr/local/bin
+#bazel help
+#cd /mnt/sdb
+#sudo rm -r bazel-0.15.2-dist
 # tf source code
-cd /mnt/sdb
-wget https://github.com/tensorflow/tensorflow/archive/v1.8.0.tar.gzi -O tensorflow-1.8.0.tar.gz
-tar xzvf tensorflow-1.8.0.tar.gz
-wget https://github.com/peterlee0127/tensorflow-nvJetson/blob/master/patch/tensorflow1.8.patch
-git apply tensorflow1.8.patch
-cd /mnt/sdb/src/tensorflow-1.8.0
-./configure
+#cd /mnt/sdb
+#wget https://github.com/tensorflow/tensorflow/archive/v1.8.0.tar.gzi -O tensorflow-1.8.0.tar.gz
+#tar xzvf tensorflow-1.8.0.tar.gz
+#wget https://github.com/peterlee0127/tensorflow-nvJetson/blob/master/patch/tensorflow1.8.patch
+#git apply tensorflow1.8.patch
+#cd /mnt/sdb/src/tensorflow-1.8.0
+#./configure
 
 # gym
 #cd ~/
@@ -73,7 +74,7 @@ cd /mnt/sdb/src/tensorflow-1.8.0
 #git clone https://github.com/openai/gym.git
 #cd gym
 #for full install(source)
-#pip3 install -U 'mujoco-py<1.50.2,>=1.50.1'
+#pip3 install -U 'mujoco-py<1.50.2,>=1.50.1' ; mujoco does not support arm
 #pip install -e '.[all]'
 #pip install -e .
 pip3 install gym
@@ -82,13 +83,13 @@ pip3 install gym
 #sudo rm -r gym
 
 
-# baselines
+# baselines install from directory
 cd /mnt/sdb
 #git clone https://github.com/openai/baselines.git
 #cd baselines
 #pip install -e .
 #cd /mnt/sdb
-sudo rm -r baselines
-git clone https://github.com/hill-a/stable-baselines && cd stable-baselines
+#sudo rm -r baselines
+#git clone https://github.com/hill-a/stable-baselines && cd stable-baselines
 pip install -e .[docs,tests]
 

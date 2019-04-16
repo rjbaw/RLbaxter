@@ -1,4 +1,8 @@
 #!/bin/bash
+
+# Alternative way of passing GPU device to docker, does not work as of now
+# script provided by Nvidia
+
 #Jason T. 2-6-2018
 #/usr/local/bin/, chmod +x txdocker, 
 

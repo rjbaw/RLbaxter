@@ -1,6 +1,6 @@
 #!/bin/bash
 
-#symbolic linking
+#symbolic linking relevant for jetpack 4.1.1
 
 cd /usr/lib
 ln -s libmpi_cxx.so.1 libmpi_cxx.so.20
@@ -13,8 +13,6 @@ ln -s libm.so libm.so.6
 # on host
 
 ln -s /usr/lib/aarch64-linux-gnu/libdrm.so /usr/lib/aarch64-linux-gnu/libdrm.so.2
-
-
 
 
 sudo apt-get install -y cuda-toolkit-10-0 libgomp1 libfreeimage-dev libopenmpi-dev openmpi-bin

@@ -193,7 +193,7 @@ class DataLoader(object):
                 self.queue.put(None)
 
     @classmethod
-    def _makeBatchElement(cls, image_path, image_path2, multi_view=False, use_triplets=False, apply_occlusion=False,
+    def _makeBatchElement(cls, image_path, multi_view=False, use_triplets=False, apply_occlusion=False,
                           occlusion_percentage=None):
         """
         :param image_path: (str) path to an image (without the 'data/' prefix)
@@ -204,24 +204,24 @@ class DataLoader(object):
         # Remove trailing .jpg if present
         #image_path = 'data/' + image_path.split('.jpg')[0]
         image_path = image_path.split('.jpg')[0]
-        image_path2 = image_path2.split('.jpg')[0]
+#        image_path2 = image_path2.split('.jpg')[0]
 
         if multi_view:
             images = []
 
             # Load different view of the same timestep
-            for i in range(1):
-#            for i in range(2):
-                im_1 = cv2.imread("{}.jpg".format(image_path, i + 1))
-#                 im = cv2.imread("{}_{}.jpg".format(image_path, i + 1))
+#            for i in range(1):
+            for i in range(2):
+#                im_1 = cv2.imread("{}.jpg".format(image_path, i + 1))
+                im = cv2.imread("{}_{}.jpg".format(image_path, i + 1))
                 if im is None:
                     raise ValueError("tried to load {}_{}.jpg, but it was not found".format(image_path, i + 1))
 
-            # modified for second cam
-            for i in range(1):
-                im_2 = cv2.imread("{}.jpg".format(image_path2, i + 1))
-                if im is None:
-                    raise ValueError("tried to load {}_{}.jpg, but it was not found".format(image_path, i + 1))
+#            # modified for second cam
+#            for i in range(1):
+#                im_2 = cv2.imread("{}.jpg".format(image_path2, i + 1))
+#                if im is None:
+#                    raise ValueError("tried to load {}_{}.jpg, but it was not found".format(image_path, i + 1))
 
             #combining two images
 #            im = np.concatenate((im_1, im_2))

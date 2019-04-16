@@ -41,7 +41,7 @@ catkin_make install
 #echo "export GAZEBO_MODEL_PATH=$(rospack find arm_scenario_simulator)/models:$GAZEBO_MODEL_PATH" >> ~/.bashrc
 echo "export GAZEBO_MODEL_PATH=~/ros_ws/src/arm_scenario_simulator/models:$GAZEBO_MODEL_PATH" >> ~/.bashrc
 
-# move-it
+# move-it, does not work since the driver failed to install
 #sudo apt-get install ros-kinetic-moveit
 #git clone -b 26compat https://github.com/mongodb/mongo-cxx-driver.git
 #sudo apt-get install scons

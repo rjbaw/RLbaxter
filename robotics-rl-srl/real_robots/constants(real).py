@@ -26,7 +26,8 @@ if USING_REAL_BAXTER:
     # Button position (target)
     BUTTON_POS = [0.7090276, 0.13833109, -0.11170768]
     # Distance below which the target is considered to be reached
-    DIST_TO_TARGET_THRESHOLD = 0.035
+#    DIST_TO_TARGET_THRESHOLD = 0.035
+    DIST_TO_TARGET_THRESHOLD = 0.00
     # Max distance between end effector and the button (for negative reward)
     MAX_DISTANCE = 0.16
     # Used by the inverse kinematics

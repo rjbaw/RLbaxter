@@ -1,0 +1,1 @@
+{"fps": 0, "log_interval": 100, "n_seconds": 14.496752500534058, "new_tb_log": true, "reset_num_timesteps": true, "seed": 0, "states": null, "t_start": 1554322132.0011709, "tb_log_name": "A2C", "total_timesteps": 1100000, "update": 1, "writer": null}

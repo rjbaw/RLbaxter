@@ -5,7 +5,7 @@ import environments.gym_baxter.baxter_env as baxter_env
 
 env = baxter_env.BaxterEnv(renders=False, is_discrete=True, log_folder="baxter_real_2", record_data=True)
 timesteps = 500  # must be greater than MAX_STEPS
-episodes = 100
+episodes = 50
 env.seed(0)
 i = 0
 

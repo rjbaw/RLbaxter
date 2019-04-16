@@ -17,10 +17,10 @@ from real_robots.utils import recvMatrix
 from state_representation.episode_saver import EpisodeSaver
 #from episode_saver import EpisodeSaver
 
-#RENDER_HEIGHT = 224
-#RENDER_WIDTH = 224
-RENDER_HEIGHT = 540
-RENDER_WIDTH = 960
+RENDER_HEIGHT = 224
+RENDER_WIDTH = 224
+#RENDER_HEIGHT = 540
+#RENDER_WIDTH = 960
 N_CONTACTS_BEFORE_TERMINATION = 2
 RELATIVE_POS = True
 
@@ -74,7 +74,7 @@ class BaxterEnv(SRLGymEnv):
     :param srl_pipe: (Queue, [Queue]) contains the input and output of the SRL model
     """
 
-    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1, multi_view=False, action_joints=False, random_target=False, action_repeat=1,
+    def __init__(self, renders=False, is_discrete=True, log_folder="baxter_log_folder", state_dim=-1, multi_view=False, action_joints=False, random_target=True, action_repeat=1,
                  learn_states=False, record_data=False, force_down=True,
                  shape_reward=False, env_rank=0, srl_pipe=None, srl_model="raw_pixels",**_):
         super(BaxterEnv, self).__init__(srl_model=srl_model,

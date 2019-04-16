@@ -1,0 +1,1 @@
+{"enqueue_threads": [], "fps": 0, "log_interval": 100, "n_seconds": 17.53235626220703, "new_tb_log": true, "old_uninitialized_vars": [], "reset_num_timesteps": true, "seed": 0, "states": null, "t_start": 1554135645.5791197, "tb_log_name": "ACKTR", "total_timesteps": 1100000, "update": 1, "writer": null}

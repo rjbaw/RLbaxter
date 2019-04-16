@@ -16,10 +16,12 @@ from environments.mobile_robot.mobile_robot_line_target_env import MobileRobotLi
 from environments.gym_baxter.baxter_env import BaxterEnv
 from environments.robobo_gym.robobo_env import RoboboEnv
 
+# My attempt to merge kwargs
 #def _merge(a, b):
 #    a.update(b)
 #    return a
 
+# old kwargs
 #def register(_id, **kvargs):
 #    if _id in registry.env_specs:
 #        return
@@ -66,6 +68,7 @@ if isXAvailable():
     # Catch if X available, but GL context unavailable. 
     # This prevents SSH crashing when X is passed without GL context.
 
+# Cannot import what doesn't exist
 #    try:
 #        from environments.car_racing.car_env import CarRacingEnv
 #        registered_env["CarRacingGymEnv-v0"] = (CarRacingEnv, SRLGymEnv, PlottingType.PLOT_2D, #ThreadingType.NONE)
@@ -86,6 +89,7 @@ for name, (env_class, _, _, _) in registered_env.items():
         entry_point=env_class.__module__ + ":" + env_class.__name__,
         timestep_limit=None,  # This limit is changed in the file
         reward_threshold=None,  # Threshold at which the environment is considered as solved
+# kwargs merge failed here must do it else where
         #kwargs=_merge({'action_repeat': 'random_target', 'multi-view': 'is_discrete'}, kwargs)
         #kwargs=kwargs
     )
