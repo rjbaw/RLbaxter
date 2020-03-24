@@ -6,7 +6,7 @@ atari-py==0.1.7
 attrs==18.2.0
 Babel==2.6.0
 baselines==0.1.5
-bleach==3.0.2
+bleach==3.1.2
 Box2D==2.3.2
 Box2D-kengz==2.3.3
 certifi==2018.11.29
